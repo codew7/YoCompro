@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Presupuestos</title>
+    <title>Yo Compro</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
+
+        /* Para navegadores como Chrome, Safari y Edge */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+
         /* Estilos globales para la fuente y tamaño de letra */
         body, input, label, button, table, th, td {
             font-family: Arial, sans-serif;
@@ -13,7 +21,7 @@
         }
 
         body { 
-            background-color: #673AB7; 
+            background-color: #dbcf1f; 
             color: white; 
             text-align: center; 
         }
@@ -101,6 +109,14 @@
         #nombre { 
             width: 300px; 
         }
+
+        .whatsapp-icon {
+        width: 30px;
+        height: 30px;
+        vertical-align: middle; /* Alinea la imagen con el texto */
+        margin-right: 10px; /* Espacio entre el icono y el texto */
+        }
+
     </style>
 </head>
 <body>
@@ -108,10 +124,13 @@
         <!-- Encabezado con texto a la izquierda y el logo -->
         <div class="encabezado">
             <img src="logo.png" alt="Logo"> <!-- Agrega aquí la ruta de tu logo -->
-            <h1>Presupuesto</h1>
+            <h1>Orden de Compra</h1>
             <p id="fecha"></p>
             <br>
-            <p>Tel. 1131308444</p>
+            <p>
+                <img src="whatsapp.png" alt="WhatsApp" class="whatsapp-icon"> Tel. 266 4328198
+            </p>
+            
         </div>
 
         <div class="header">
@@ -131,7 +150,7 @@
             <tbody id="items">
                 <tr>
                     <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
-                    <td><input type="text" class="articulo"></td>
+                    <td><select class="articulo" onchange="actualizarValor(this)"></select></td>
                     <td><input type="number" class="valor" oninput="calcularTotales()"></td>
                     <td class="total">$0</td>
                 </tr>
@@ -181,13 +200,20 @@
         }
 
         function agregarFila() {
-            let fila = `<tr>
-                <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
-                <td><input type="text" class="articulo"></td>
-                <td><input type="number" class="valor" oninput="calcularTotales()"></td>
-                <td class="total">$0</td>
+        let fila = `<tr>
+            <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
+            <td><select class="articulo" onchange="actualizarValor(this)"></select></td>
+            <td><input type="number" class="valor" oninput="calcularTotales()"></td>
+            <td class="total">$0</td>
             </tr>`;
-            document.getElementById('items').insertAdjacentHTML('beforeend', fila);
+        document.getElementById('items').insertAdjacentHTML('beforeend', fila);
+    
+        // Obtener el último select agregado
+        const nuevoSelect = document.querySelector('#items tr:last-child .articulo');
+    
+        // Llenar ese select con las opciones
+        nuevoSelect.innerHTML = `<option value="" disabled selected>Selecciona un artículo</option>` + 
+        Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
         }
 
         function capturarPresupuesto() {
@@ -207,11 +233,51 @@
             document.getElementById('totalFinal').innerText = 0;
             document.getElementById('items').innerHTML = `<tr>
                 <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
-                <td><input type="text" class="articulo"></td>
+                <td><select class="articulo" onchange="actualizarValor(this)"></select></td>
                 <td><input type="number" class="valor" oninput="calcularTotales()"></td>
                 <td class="total">$0</td>
             </tr>`;
+            cargarArticulos();
         }
+
+        let articulos = {};
+
+        function cargarArticulos() {
+        const apiKey = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q'; 
+        const spreadsheetId = '1q_wXZ9DRG9mgSk3-ppA9Wa3dMA-nIR1R2rfVTkYvSg4'; 
+        const range = 'Articulos!A2:B'; 
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            articulos = data.values.reduce((acc, [articulo, valor]) => {
+                acc[articulo] = valor;
+                return acc;
+            }, {});
+
+            document.querySelectorAll('.articulo').forEach(select => {
+                select.innerHTML = `<option value="" disabled selected>Selecciona un artículo</option>` + 
+                    Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
+            });
+        });
+        }
+
+        function actualizarValor(select) {
+        const articulo = select.value;
+        const row = select.closest('tr');
+        const valorInput = row.querySelector('.valor');
+    
+        if (articulo) {
+        valorInput.value = articulos[articulo] || 0;
+        } else {
+        valorInput.value = ''; // Mantener vacío si no hay selección
+        }
+        calcularTotales();
+        }
+
+        // Cargar artículos al inicio
+        cargarArticulos();
     </script>
 </body>
 </html>
