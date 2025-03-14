@@ -28,12 +28,13 @@
         .container { 
             background: white; 
             color: black; 
-            width: 95%; 
+ 
             margin: auto; 
-            padding: 20px; 
+            padding: 15px; 
             border-radius: 10px; 
-            position: relative; 
+            position: relative;
         }
+        
         .header { 
             display: flex; 
             justify-content: space-between; 
@@ -74,38 +75,51 @@
             gap: 15px; 
             margin-top: 20px; 
         }
+
         table { 
             width: 100%; 
             border-collapse: collapse; 
         }
+        
         th, td { 
             border: 1px solid black; 
             padding: 10px; 
             text-align: center; 
         }
+
         th:nth-child(1), td:nth-child(1) { 
-            width: 5%; 
+            width: 1%; 
         }
+
         th:nth-child(2), td:nth-child(2) { 
             width: 75%; 
         }
+
         th:nth-child(3), td:nth-child(3) { 
-            width: 10%; 
+            width: 12%; 
         }
+
         th:nth-child(4), td:nth-child(4) { 
-            width: 10%; 
+            width: 12%; 
         }
+
         .cantidad, .articulo, .valor, .total, #descuento, #vendedor, #nombre {
-            width: 95%; /* Ajusta el tamaño de los campos */
+            width: 100%; /* Ajusta el tamaño de los campos */
+            padding: 1px; /* Espacio interno de los campos */
+            margin: 1px 0; /* Espacio externo de los campos */
+            box-sizing: border-box; /* Incluye el borde en el tamaño total */
+            
         }
 
         /* Estilos específicos para los campos */
         #descuento { 
             width: 50px; 
         }
+
         #vendedor { 
             width: 100px; 
         }
+
         #nombre { 
             width: 300px; 
         }
