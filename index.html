@@ -271,7 +271,7 @@
             }, {});
 
             document.querySelectorAll('.articulo').forEach(select => {
-                select.innerHTML = `<option value="" disabled selected>Selecciona un artículo</option>` + 
+                select.innerHTML = `<option value="" disabled selected>Seleccione artículo</option>` + 
                     Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
             });
         });
