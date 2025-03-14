@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Presupuestos</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        /* Estilos globales para la fuente y tamaño de letra */
+        body, input, label, button, table, th, td {
+            font-family: Arial, sans-serif;
+            font-size: 14px; /* Puedes ajustar el tamaño según prefieras */
+        }
+
+        body { 
+            background-color: #673AB7; 
+            color: white; 
+            text-align: center; 
+        }
+        .container { 
+            background: white; 
+            color: black; 
+            width: 95%; 
+            margin: auto; 
+            padding: 20px; 
+            border-radius: 10px; 
+            position: relative; 
+        }
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: left; 
+            margin-bottom: 20px; 
+        }
+
+        /* Estilos del nuevo encabezado */
+        .encabezado {
+            text-align: left; /* Alinea el encabezado hacia la izquierda */
+            margin-bottom: 20px; /* Espacio debajo del encabezado */
+        }
+
+        .encabezado h1 {
+            margin: 0;
+        }
+
+        .encabezado p {
+            margin: 0;
+            font-size: 12px;
+        }
+
+        .encabezado img {
+            max-width: 150px; /* Ajusta el tamaño del logo */
+            margin-right: 10px; /* Espacio a la derecha del logo */
+        }
+
+        .totals { 
+            display: flex; 
+            justify-content: flex-end; 
+            flex-direction: column; 
+            align-items: flex-end; 
+            margin-top: 20px; 
+        }
+        .actions { 
+            display: flex; 
+            justify-content: right; 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        th, td { 
+            border: 1px solid black; 
+            padding: 10px; 
+            text-align: center; 
+        }
+        th:nth-child(1), td:nth-child(1) { 
+            width: 5%; 
+        }
+        th:nth-child(2), td:nth-child(2) { 
+            width: 75%; 
+        }
+        th:nth-child(3), td:nth-child(3) { 
+            width: 10%; 
+        }
+        th:nth-child(4), td:nth-child(4) { 
+            width: 10%; 
+        }
+        .cantidad, .articulo, .valor, .total, #descuento, #vendedor, #nombre {
+            width: 95%; /* Ajusta el tamaño de los campos */
+        }
+
+        /* Estilos específicos para los campos */
+        #descuento { 
+            width: 50px; 
+        }
+        #vendedor { 
+            width: 100px; 
+        }
+        #nombre { 
+            width: 300px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="presupuesto">
+        <!-- Encabezado con texto a la izquierda y el logo -->
+        <div class="encabezado">
+            <img src="logo.png" alt="Logo"> <!-- Agrega aquí la ruta de tu logo -->
+            <h1>Presupuesto</h1>
+            <p id="fecha"></p>
+            <br>
+            <p>Tel. 1131308444</p>
+        </div>
+
+        <div class="header">
+            <label>Nombre: <input type="text" id="nombre"></label>
+          <br>
+          <br>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cant</th>
+                    <th>Artículo</th>
+                    <th>Valor U.</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="items">
+                <tr>
+                    <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
+                    <td><input type="text" class="articulo"></td>
+                    <td><input type="number" class="valor" oninput="calcularTotales()"></td>
+                    <td class="total">$0</td>
+                </tr>
+            </tbody>
+        </table>
+      <br>
+        <button onclick="agregarFila()">Agregar Artículo</button>
+        <div class="totals">
+            <label>Subtotal: $<span id="subtotal">0</span></label>
+        <br>
+            <label>Descuento: $ <input type="number" id="descuento" value="" oninput="calcularTotales()"></label>
+        <br>
+            <label>Total Final: $<span id="totalFinal">0</span></label>
+        <br>
+            <label>Vendedor: <input type="text" id="vendedor"></label>
+        <br>
+        </div>
+        <div class="actions">
+            <button onclick="capturarPresupuesto()">Guardar</button>
+            <button onclick="nuevoPresupuesto()">Nuevo</button>
+        </div>
+    </div>
+    
+    <script>
+        // Obtener la fecha actual
+        const fechaActual = new Date();
+
+        // Formatear la fecha en formato: día mes año
+        const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+        const fechaFormateada = fechaActual.toLocaleDateString('es-ES', opciones);
+
+        // Mostrar la fecha en el elemento con id "fecha"
+        document.getElementById('fecha').innerText = fechaFormateada;
+
+        function calcularTotales() {
+            let subtotal = 0;
+            document.querySelectorAll('#items tr').forEach(row => {
+                let cantidad = row.querySelector('.cantidad').value || 0;
+                let valor = row.querySelector('.valor').value || 0;
+                let total = cantidad * valor;
+                row.querySelector('.total').innerText = `$${total}`;
+                subtotal += total;
+            });
+            document.getElementById('subtotal').innerText = subtotal;
+            let descuento = document.getElementById('descuento').value || 0;
+            document.getElementById('totalFinal').innerText = subtotal - descuento;
+        }
+
+        function agregarFila() {
+            let fila = `<tr>
+                <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
+                <td><input type="text" class="articulo"></td>
+                <td><input type="number" class="valor" oninput="calcularTotales()"></td>
+                <td class="total">$0</td>
+            </tr>`;
+            document.getElementById('items').insertAdjacentHTML('beforeend', fila);
+        }
+
+        function capturarPresupuesto() {
+            html2canvas(document.getElementById("presupuesto")).then(canvas => {
+                let link = document.createElement("a");
+                link.download = "presupuesto.png";
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function nuevoPresupuesto() {
+            document.getElementById('nombre').value = "";
+            document.getElementById('vendedor').value = "";
+            document.getElementById('descuento').value = 0;
+            document.getElementById('subtotal').innerText = 0;
+            document.getElementById('totalFinal').innerText = 0;
+            document.getElementById('items').innerHTML = `<tr>
+                <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
+                <td><input type="text" class="articulo"></td>
+                <td><input type="number" class="valor" oninput="calcularTotales()"></td>
+                <td class="total">$0</td>
+            </tr>`;
+        }
+    </script>
+</body>
+</html>
