@@ -92,15 +92,15 @@
         }
 
         th:nth-child(2), td:nth-child(2) { 
-            width: 75%; 
+            width: auto; 
         }
 
         th:nth-child(3), td:nth-child(3) { 
-            width: 12%; 
+            width: 15%; 
         }
 
         th:nth-child(4), td:nth-child(4) { 
-            width: 12%; 
+            width: 15%; 
         }
 
         .cantidad, .articulo, .valor, .total, #descuento, #vendedor, #nombre {
@@ -226,7 +226,7 @@
         const nuevoSelect = document.querySelector('#items tr:last-child .articulo');
     
         // Llenar ese select con las opciones
-        nuevoSelect.innerHTML = `<option value="" disabled selected>Selecciona un artículo</option>` + 
+        nuevoSelect.innerHTML = `<option value="" disabled selected>Seleccione artículo</option>` + 
         Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
         }
 
