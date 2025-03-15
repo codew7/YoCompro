@@ -7,12 +7,12 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
 
-        /* Para navegadores como Chrome, Safari y Edge */
+        /* Para navegadores como Chrome, Safari y Edge 
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
-        }
+        }*/
 
         /* Estilos globales para la fuente y tamaño de letra */
         body, input, label, button, table, th, td {
@@ -26,7 +26,7 @@
             text-align: center; 
         }
         .container { 
-            background: white; 
+            background: #f1eeb8; 
             color: black; 
  
             margin: auto; 
@@ -44,7 +44,7 @@
 
         /* Estilos del nuevo encabezado */
         .encabezado {
-            text-align: left; /* Alinea el encabezado hacia la izquierda */
+            text-align: center; /* Alinea el encabezado al centro */
             margin-bottom: 20px; /* Espacio debajo del encabezado */
         }
 
@@ -88,11 +88,11 @@
         }
 
         th:nth-child(1), td:nth-child(1) { 
-            width: 1%; 
+            width: 5%; 
         }
 
         th:nth-child(2), td:nth-child(2) { 
-            width: auto; 
+            width: 65%; 
         }
 
         th:nth-child(3), td:nth-child(3) { 
@@ -135,11 +135,11 @@
 </head>
 <body>
     <div class="container" id="presupuesto">
-        <!-- Encabezado con texto a la izquierda y el logo -->
+        <!-- Encabezado con texto centrado y el logo -->
         <div class="encabezado">
             <img src="logo.png" alt="Logo"> <!-- Agrega aquí la ruta de tu logo -->
             <h1>Orden de Compra</h1>
-            <p id="fecha"></p>
+            <h2 id="fecha"></h2>
             <br>
             <p>
                 <img src="whatsapp.png" alt="WhatsApp" class="whatsapp-icon"> Tel. 266 4328198
