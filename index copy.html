@@ -17,12 +17,12 @@
         /* Estilos globales para la fuente y tamaño de letra */
         body, input, label, button, table, td {
             font-family: Arial, sans-serif;
-            font-size: 12px; /* Puedes ajustar el tamaño según prefieras */
+            font-size: 14px; /* Puedes ajustar el tamaño según prefieras */
         }
 
-        th  {
+        input, button, th  {
             font-family: Arial, sans-serif;
-            font-size: 16px; /* Puedes ajustar el tamaño según prefieras */
+            font-size: 8px; /* Puedes ajustar el tamaño según prefieras */
         }
 
         body { 
@@ -58,7 +58,7 @@
 
         .encabezado p {
             margin: 0;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .encabezado img {
@@ -122,11 +122,11 @@
         }
 
         #vendedor { 
-            width: 30px; 
+            width: 20px; 
         }
 
         #nombre { 
-            width: 250px; 
+            width: 300px; 
         }
 
         .whatsapp-icon {
@@ -250,7 +250,6 @@
                 link.download = "presupuesto.png";
                 link.href = canvas.toDataURL();
                 link.click();
-                guardarEnGoogleSheets(); // Guardar en Google Sheets al capturar
             });
         }
 
@@ -262,8 +261,6 @@
                         navigator.share({
                             title: 'Presupuesto',
                             files: [file]
-                        }).then(() => {
-                            guardarEnGoogleSheets(); // Guardar en Google Sheets al compartir
                         }).catch(error => console.error('Error al compartir:', error));
                     } else {
                         alert('La función de compartir no es compatible con este navegador.');
@@ -321,56 +318,6 @@
         valorInput.value = ''; // Mantener vacío si no hay selección
         }
         calcularTotales();
-        }
-
-        function guardarEnGoogleSheets() {
-            const nombre = document.getElementById('nombre').value;
-            const vendedor = document.getElementById('vendedor').value;
-            const descuento = document.getElementById('descuento').value;
-            const subtotal = document.getElementById('subtotal').innerText;
-            const totalFinal = document.getElementById('totalFinal').innerText;
-
-            const items = [];
-            document.querySelectorAll('#items tr').forEach(row => {
-                const cantidad = row.querySelector('.cantidad').value;
-                const articulo = row.querySelector('.articulo').value;
-                const valor = row.querySelector('.valor').value;
-                const total = row.querySelector('.total').innerText;
-                items.push({ cantidad, articulo, valor, total });
-            });
-
-            const data = {
-                nombre,
-                vendedor,
-                descuento,
-                subtotal,
-                totalFinal,
-                items
-            };
-
-            const apiKey = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q';
-            const spreadsheetId = '1q_wXZ9DRG9mgSk3-ppA9Wa3dMA-nIR1R2rfVTkYvSg4';
-            const range = 'Ventas!A1';
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?valueInputOption=USER_ENTERED&key=${apiKey}`;
-
-            const values = [
-                [nombre, vendedor, descuento, subtotal, totalFinal, JSON.stringify(items)]
-            ];
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ values })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Datos guardados en Google Sheets:', data);
-            })
-            .catch(error => {
-                console.error('Error al guardar en Google Sheets:', error);
-            });
         }
 
         // Cargar artículos al inicio
