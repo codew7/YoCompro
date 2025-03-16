@@ -15,14 +15,9 @@
         }*/
 
         /* Estilos globales para la fuente y tamaño de letra */
-        body, input, label, button, table, td {
+        body, input, label, button, table, th, td {
             font-family: Arial, sans-serif;
-            font-size: 12px; /* Puedes ajustar el tamaño según prefieras */
-        }
-
-        th  {
-            font-family: Arial, sans-serif;
-            font-size: 16px; /* Puedes ajustar el tamaño según prefieras */
+            font-size: 14px; /* Puedes ajustar el tamaño según prefieras */
         }
 
         body { 
@@ -290,37 +285,37 @@
         let articulos = {};
 
         function cargarArticulos() {
-        const apiKey = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q'; 
-        const spreadsheetId = '1q_wXZ9DRG9mgSk3-ppA9Wa3dMA-nIR1R2rfVTkYvSg4'; 
-        const range = 'Articulos!A2:B'; 
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+            const apiKey = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q'; 
+            const spreadsheetId = '1q_wXZ9DRG9mgSk3-ppA9Wa3dMA-nIR1R2rfVTkYvSg4'; 
+            const range = 'Articulos!A2:B'; 
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
-        fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            articulos = data.values.reduce((acc, [articulo, valor]) => {
-                acc[articulo] = valor;
-                return acc;
-            }, {});
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                articulos = data.values.reduce((acc, [articulo, valor]) => {
+                    acc[articulo] = valor;
+                    return acc;
+                }, {});
 
-            document.querySelectorAll('.articulo').forEach(select => {
-                select.innerHTML = `<option value="" disabled selected>Seleccione artículo</option>` + 
-                    Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
+                document.querySelectorAll('.articulo').forEach(select => {
+                    select.innerHTML = `<option value="" disabled selected>Seleccione artículo</option>` + 
+                        Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
+                });
             });
-        });
         }
 
         function actualizarValor(select) {
-        const articulo = select.value;
-        const row = select.closest('tr');
-        const valorInput = row.querySelector('.valor');
-    
-        if (articulo) {
-        valorInput.value = articulos[articulo] || 0;
-        } else {
-        valorInput.value = ''; // Mantener vacío si no hay selección
-        }
-        calcularTotales();
+            const articulo = select.value;
+            const row = select.closest('tr');
+            const valorInput = row.querySelector('.valor');
+        
+            if (articulo) {
+                valorInput.value = articulos[articulo] || 0;
+            } else {
+                valorInput.value = ''; // Mantener vacío si no hay selección
+            }
+            calcularTotales();
         }
 
         function guardarEnGoogleSheets() {
@@ -362,7 +357,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ values })
+                body: JSON.stringify({ values: values })
             })
             .then(response => response.json())
             .then(data => {
