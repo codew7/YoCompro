@@ -191,7 +191,6 @@
         <br>
         </div>
         <div class="actions">
-            <button onclick="registrarEnGoogleSheets()">Google Sheets</button>
             <button onclick="compartirPresupuesto()">Compartir</button>
             <button onclick="capturarPresupuesto()">Guardar</button>
             <button onclick="nuevoPresupuesto()">Nuevo</button>
@@ -348,7 +347,7 @@ function compartirPresupuesto() {
                 items
             };
 
-            const response = await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbwK1-MPiVU1cZn9pdpLjnSRrQL6tvZIbUzLslF6M0O9P9WZiMbrdM9SMLgcWsN00w0/exec', {
     method: 'POST',
     mode: 'no-cors', // Esta línea evita el error de CORS
     headers: {
