@@ -7,12 +7,12 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
 
-        /* Para navegadores como Chrome, Safari y Edge 
+        /* Para navegadores como Chrome, Safari y Edge */
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
-        }*/
+        }
 
         /* Estilos globales para la fuente y tamaño de letra */
         body, input, label, button, table, th, td {
@@ -220,12 +220,12 @@
                 let cantidad = row.querySelector('.cantidad').value || 0;
                 let valor = row.querySelector('.valor').value || 0;
                 let total = cantidad * valor;
-                row.querySelector('.total').innerText = `$${total}`;
+                row.querySelector('.total').innerText = `$${total.toLocaleString('es-ES')}`;
                 subtotal += total;
             });
-            document.getElementById('subtotal').innerText = subtotal;
+            document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-ES');
             let descuento = document.getElementById('descuento').value || 0;
-            document.getElementById('totalFinal').innerText = subtotal - descuento;
+            document.getElementById('totalFinal').innerText = (subtotal - descuento).toLocaleString('es-ES');
         }
 
         function agregarFila() {
