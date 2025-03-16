@@ -220,7 +220,7 @@
                 let cantidad = row.querySelector('.cantidad').value || 0;
                 let valor = row.querySelector('.valor').value || 0;
                 let total = cantidad * valor;
-                row.querySelector('.total').innerText = `$${total.toLocaleString('es-ES')}`;
+                row.querySelector('.total').innerText = `$${total}`;
                 subtotal += total;
             });
             document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-ES');
