@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yo Compro</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <style>
 
         /* Para navegadores como Chrome, Safari y Edge */
@@ -171,10 +173,7 @@
             <tbody id="items">
                 <tr>
                     <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
-                    <td>
-                        <input type="text" class="articulo" list="lista-articulos" oninput="filtrarArticulos(this)" onchange="actualizarValor(this)">
-                        <datalist id="lista-articulos"></datalist>
-                    </td>               
+                    <td><select class="articulo" onchange="actualizarValor(this)"></select></td>
                     <td><input type="number" class="valor" oninput="calcularTotales()"></td>
                     <td class="total">$0</td>
                 </tr>
@@ -246,6 +245,9 @@
         // Llenar ese select con las opciones
         nuevoSelect.innerHTML = `<option value="" disabled selected>Seleccione artículo</option>` + 
         Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
+        
+        // Inicializar Select2 en el nuevo select
+        $(nuevoSelect).select2();
         }
 
         function capturarPresupuesto() {
@@ -293,40 +295,41 @@
         let articulos = {};
 
         function cargarArticulos() {
-        const apiKey = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q';
-        const spreadsheetId = '1q_wXZ9DRG9mgSk3-ppA9Wa3dMA-nIR1R2rfVTkYvSg4';
-        const range = 'Articulos!A2:B';
+        const apiKey = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q'; 
+        const spreadsheetId = '1q_wXZ9DRG9mgSk3-ppA9Wa3dMA-nIR1R2rfVTkYvSg4'; 
+        const range = 'Articulos!A2:B'; 
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
         fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                articulos = data.values.reduce((acc, [articulo, valor]) => {
-                    acc[articulo] = valor;
-                    return acc;
-                }, {});
+        .then(response => response.json())
+        .then(data => {
+            articulos = data.values.reduce((acc, [articulo, valor]) => {
+                acc[articulo] = valor;
+                return acc;
+            }, {});
 
-                let lista = document.getElementById('lista-articulos');
-                lista.innerHTML = Object.keys(articulos)
-                    .map(item => `<option value="${item}"></option>`)
-                    .join('');
+            document.querySelectorAll('.articulo').forEach(select => {
+                select.innerHTML = `<option value="" disabled selected>Seleccione artículo</option>` + 
+                    Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
+                
+                // Inicializar Select2 en los selects existentes
+                $(select).select2();
             });
+        });
         }
 
-
-        function actualizarValor(input) {
-            let articulo = input.value;
-            let row = input.closest('tr');
-            let valorInput = row.querySelector('.valor');
-
-            if (articulos[articulo]) {
-                valorInput.value = articulos[articulo]; // Asigna el valor del artículo
-            } else {
-                valorInput.value = ''; // Si no existe, deja el campo vacío
-            }
-            calcularTotales();
+        function actualizarValor(select) {
+        const articulo = select.value;
+        const row = select.closest('tr');
+        const valorInput = row.querySelector('.valor');
+    
+        if (articulo) {
+        valorInput.value = articulos[articulo] || 0;
+        } else {
+        valorInput.value = ''; // Mantener vacío si no hay selección
         }
-
+        calcularTotales();
+        }
 
         // Cargar artículos al inicio
         cargarArticulos();
@@ -365,17 +368,6 @@
             });
 
             }
-
-            function filtrarArticulos(input) {
-            let filtro = input.value.toLowerCase();
-            let lista = document.getElementById('lista-articulos');
-
-            lista.innerHTML = Object.keys(articulos)
-                .filter(item => item.toLowerCase().includes(filtro))
-                .map(item => `<option value="${item}"></option>`)
-                .join('');
-            }
-
 
     </script>
 </body>

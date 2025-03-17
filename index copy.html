@@ -7,17 +7,23 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
 
-        /* Para navegadores como Chrome, Safari y Edge 
+        /* Para navegadores como Chrome, Safari y Edge */
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
-        }*/
+        }
 
         /* Estilos globales para la fuente y tamaño de letra */
         body, input, label, button, table, th, td {
             font-family: Arial, sans-serif;
             font-size: 14px; /* Puedes ajustar el tamaño según prefieras */
+        }
+
+        label {
+            font-family: Arial, sans-serif;
+            font-size: 14px; /* Puedes ajustar el tamaño según prefieras */
+            font-weight: bold; /* Aplica negrita */
         }
 
         body { 
@@ -217,9 +223,9 @@
                 row.querySelector('.total').innerText = `$${total}`;
                 subtotal += total;
             });
-            document.getElementById('subtotal').innerText = subtotal;
+            document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-ES');
             let descuento = document.getElementById('descuento').value || 0;
-            document.getElementById('totalFinal').innerText = subtotal - descuento;
+            document.getElementById('totalFinal').innerText = (subtotal - descuento).toLocaleString('es-ES');
         }
 
         function agregarFila() {
@@ -240,15 +246,17 @@
         }
 
         function capturarPresupuesto() {
-            html2canvas(document.getElementById("presupuesto")).then(canvas => {
-                let link = document.createElement("a");
-                link.download = "presupuesto.png";
-                link.href = canvas.toDataURL();
-                link.click();
-            });
+        registrarEnGoogleSheets();
+        html2canvas(document.getElementById("presupuesto")).then(canvas => {
+        let link = document.createElement("a");
+        link.download = "presupuesto.png";
+        link.href = canvas.toDataURL();
+        link.click();
+        });
         }
 
         function compartirPresupuesto() {
+            registrarEnGoogleSheets();
             html2canvas(document.getElementById("presupuesto")).then(canvas => {
                 canvas.toBlob(blob => {
                     const file = new File([blob], "presupuesto.png", { type: "image/png" });
@@ -317,6 +325,42 @@
 
         // Cargar artículos al inicio
         cargarArticulos();
+
+        async function registrarEnGoogleSheets() {
+            const nombre = document.getElementById('nombre').value;
+            const vendedor = document.getElementById('vendedor').value;
+            const descuento = document.getElementById('descuento').value || 0;
+            const subtotal = document.getElementById('subtotal').innerText;
+            const totalFinal = document.getElementById('totalFinal').innerText;
+
+            const items = [];
+            document.querySelectorAll('#items tr').forEach(row => {
+                const cantidad = row.querySelector('.cantidad').value || 0;
+                const articulo = row.querySelector('.articulo').value || '';
+                const valor = row.querySelector('.valor').value || 0;
+                items.push([cantidad, articulo, valor]);
+            });
+
+            const data = {
+                nombre,
+                vendedor,
+                subtotal,
+                descuento,
+                totalFinal,
+                items
+            };
+
+            const response = await fetch('https://script.google.com/macros/s/AKfycbwK1-MPiVU1cZn9pdpLjnSRrQL6tvZIbUzLslF6M0O9P9WZiMbrdM9SMLgcWsN00w0/exec', {
+            method: 'POST',
+            mode: 'no-cors', // Esta línea evita el error de CORS
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            });
+
+            }
+
     </script>
 </body>
 </html>
