@@ -221,15 +221,15 @@
             function calcularTotales() {
                 let subtotal = 0;
                 document.querySelectorAll('#items tr').forEach(row => {
-                    let cantidad = row.querySelector('.cantidad').value || 0;
-                    let valor = row.querySelector('.valor').value || 0;
+                    let cantidad = parseFloat(row.querySelector('.cantidad').value) || 0;
+                    let valor = parseFloat(row.querySelector('.valor').value) || 0;
                     let total = cantidad * valor;
-                    row.querySelector('.total').innerText = `$${total}`;
+                    row.querySelector('.total').innerText = `$${total.toFixed(2)}`;
                     subtotal += total;
                 });
-                document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-ES');
-                let descuento = document.getElementById('descuento').value || 0;
-                document.getElementById('totalFinal').innerText = (subtotal - descuento).toLocaleString('es-ES');
+                document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-ES', { minimumFractionDigits: 2 });
+                let descuento = parseFloat(document.getElementById('descuento').value) || 0;
+                document.getElementById('totalFinal').innerText = (subtotal - descuento).toLocaleString('es-ES', { minimumFractionDigits: 2 });
             }
 
             function agregarFila() {
