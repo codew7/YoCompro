@@ -7,7 +7,7 @@
     <style>
         body, input, label, button, table, th, td {
             font-family: Arial, sans-serif;
-            font-size: 14px;
+            font-size: 12px;
         }
         label {
             font-weight: bold;
@@ -23,8 +23,6 @@
             margin: auto;   
             padding: 15px; 
             border-radius: 10px; 
-            width: 80%;
-            max-width: 900px;
         }
         .header {
             display: flex;
@@ -51,7 +49,21 @@
             padding: 10px; 
             text-align: center; 
         }
-
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 10px 15px;
+            margin: 0 5px;
+            border: none;
+            background-color: rgb(139, 139, 139);
+            color: white;
+            cursor: pointer;
+        }
+        .pagination button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +88,8 @@
             </thead>
             <tbody id="table-body"></tbody>
         </table>
+
+        <div class="pagination" id="pagination"></div>
     </div>
 
     <script>
@@ -85,6 +99,8 @@
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
         
         let allData = [];
+        let currentPage = 1;
+        const rowsPerPage = 100;
     
         async function fetchData() {
             try {
@@ -96,10 +112,26 @@
                     return;
                 }
                 allData = values;
-                renderTable(allData);
+                sortData();
+                renderTable(getPaginatedData());
+                renderPagination();
             } catch (error) {
                 console.error("Error al obtener los datos:", error);
             }
+        }
+    
+        function sortData() {
+            const headers = allData[0];
+            const orderIndex = headers.indexOf("Orden");
+            if (orderIndex !== -1) {
+                allData = [headers, ...allData.slice(1).sort((a, b) => b[orderIndex] - a[orderIndex])];
+            }
+        }
+    
+        function getPaginatedData() {
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            return [allData[0], ...allData.slice(1).slice(start, end)];
         }
     
         function renderTable(data) {
@@ -125,6 +157,24 @@
                 });
                 tableBody.appendChild(tr);
             });
+        }
+    
+        function renderPagination() {
+            const pagination = document.getElementById("pagination");
+            pagination.innerHTML = "";
+            const totalPages = Math.ceil((allData.length - 1) / rowsPerPage);
+    
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement("button");
+                button.textContent = i;
+                button.disabled = i === currentPage;
+                button.addEventListener("click", () => {
+                    currentPage = i;
+                    renderTable(getPaginatedData());
+                    renderPagination();
+                });
+                pagination.appendChild(button);
+            }
         }
     
         // Función para filtrar los datos según los filtros establecidos
@@ -156,6 +206,7 @@
     
             // Renderiza la tabla con el encabezado y las filas filtradas
             renderTable([headers, ...filteredRows]);
+            renderPagination();
         }
     
         // Llama a fetchData al cargar la página
