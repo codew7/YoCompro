@@ -367,7 +367,7 @@
             // Actualizar el valor de "Orden" en el div (si quieres que se muestre el valor incrementado)
             document.getElementById('orden').innerText = orden;
             const nombre = document.getElementById('nombre').value;
-            const vendedor = document.getElementById('vendedor').value;
+            const vendedor = document.getElementById('vendedor').value || '';
             const descuento = document.getElementById('descuento').value || 0;
             const subtotal = document.getElementById('subtotal').innerText;
             const totalFinal = document.getElementById('totalFinal').innerText;
