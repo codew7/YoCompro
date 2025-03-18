@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Ventas</title>
+    <style>
+        body, input, label, button, table, th, td {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        label {
+            font-weight: bold;
+        }
+        body { 
+            background-color: #f1e31f; 
+            color: white; 
+            text-align: center; 
+        }
+        .container { 
+            background: white; 
+            color: black; 
+            margin: auto;   
+            padding: 15px; 
+            border-radius: 10px; 
+            width: 80%;
+            max-width: 900px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            height: 50px;
+        }
+        .back-button {
+            background-color: black;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        th, td { 
+            border: 1px solid black; 
+            padding: 10px; 
+            text-align: center; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Logo">
+            <h2>Registo de Ventas</h2>
+            <a href="https://codew7.github.io/Test/" class="back-button">Volver</a>
+        </div>
+        
+        <label for="start-date">Desde:</label>
+        <input type="date" id="start-date">
+        <label for="end-date">Hasta:</label>
+        <input type="date" id="end-date">
+        
+        <label for="name-filter">Nombre:</label>
+        <input type="text" id="name-filter" placeholder="Filtrar por Nombre">
+        
+        <label for="seller-filter">Vendedor:</label>
+        <input type="text" id="seller-filter" placeholder="Filtrar por Vendedor">
+        
+        <button onclick="fetchData()">Filtrar</button>
+
+        <table>
+            <thead>
+                <tr id="table-header"></tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const apiKey = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q';
+        const spreadsheetId = '1q_wXZ9DRG9mgSk3-ppA9Wa3dMA-nIR1R2rfVTkYvSg4';
+        const range = 'Ventas!A:G';
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+
+        async function fetchData() {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const values = data.values;
+                if (!values || values.length === 0) {
+                    alert("No se encontraron datos.");
+                    return;
+                }
+                renderTable(values);
+            } catch (error) {
+                console.error("Error al obtener los datos:", error);
+            }
+        }
+
+        function renderTable(data) {
+            const tableHeader = document.getElementById("table-header");
+            const tableBody = document.getElementById("table-body");
+            tableHeader.innerHTML = "";
+            tableBody.innerHTML = "";
+            
+            data[0].forEach(header => {
+                let th = document.createElement("th");
+                th.textContent = header;
+                tableHeader.appendChild(th);
+            });
+            
+            let filteredData = data.slice(1);
+            const last20Rows = filteredData.slice(-20);
+            last20Rows.forEach(row => {
+                let tr = document.createElement("tr");
+                row.forEach(cell => {
+                    let td = document.createElement("td");
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+        }
+
+        window.onload = fetchData;
+    </script>
+</body>
+</html>
