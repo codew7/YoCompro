@@ -154,14 +154,14 @@
         
         <div class="encabezado">
             <img src="logo.png" alt="Logo"> <!-- Agrega aquí la ruta de tu logo -->
-            <h3>Orden de Compra</h3>
+            <h3>Orden de Compra #<span id="orden"></span></h3>
             <p id="fecha"></p>
             <br>
             <p>
                 <img src="whatsapp.png" alt="WhatsApp" class="whatsapp-icon"> Tel. 266 4328198
             </p>
-            
         </div>
+        
 
         <div class="header">
             <label>Nombre: <input type="text" id="nombre"></label>
@@ -332,8 +332,8 @@
             }, {});
 
             document.querySelectorAll('.articulo').forEach(select => {
-                select.innerHTML = `<option value="" disabled selected>Seleccione artículo</option>` + 
-                    Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
+            select.innerHTML = `<option value="" disabled selected>Seleccione artículo</option>` + 
+            Object.keys(articulos).map(item => `<option value="${item}">${item}</option>`).join('');
             });
         });
         }
@@ -355,39 +355,71 @@
         cargarArticulos();
 
         async function registrarEnGoogleSheets() {
-            const nombre = document.getElementById('nombre').value;
-            const vendedor = document.getElementById('vendedor').value;
-            const descuento = document.getElementById('descuento').value || 0;
-            const subtotal = document.getElementById('subtotal').innerText;
-            const totalFinal = document.getElementById('totalFinal').innerText;
 
-            const items = [];
-            document.querySelectorAll('#items tr').forEach(row => {
-                const cantidad = row.querySelector('.cantidad').value || 0;
-                const articulo = row.querySelector('.articulo').value || '';
-                const valor = row.querySelector('.valor').value || 0;
-                items.push([cantidad, articulo, valor]);
-            });
+        // Obtener el valor de "Orden" y sumarle 1
+        let orden = parseInt(document.getElementById('orden').innerText) || 0;  // Convertir a número si es posible
+        orden += 1; // Sumarle 1
 
-            const data = {
-                nombre,
-                vendedor,
-                subtotal,
-                descuento,
-                totalFinal,
-                items
-            };
+        // Actualizar el valor de "Orden" en el div (si quieres que se muestre el valor incrementado)
+        document.getElementById('orden').innerText = orden;
+        const nombre = document.getElementById('nombre').value;
+        const vendedor = document.getElementById('vendedor').value;
+        const descuento = document.getElementById('descuento').value || 0;
+        const subtotal = document.getElementById('subtotal').innerText;
+        const totalFinal = document.getElementById('totalFinal').innerText;
+    
+        const items = [];
+        document.querySelectorAll('#items tr').forEach(row => {
+        const cantidad = row.querySelector('.cantidad').value || 0;
+        const articulo = row.querySelector('.articulo').value || '';
+        const valor = row.querySelector('.valor').value || 0;
+        items.push([cantidad, articulo, valor]);
+        });
 
-            const response = await fetch('https://script.google.com/macros/s/AKfycbwK1-MPiVU1cZn9pdpLjnSRrQL6tvZIbUzLslF6M0O9P9WZiMbrdM9SMLgcWsN00w0/exec', {
-            method: 'POST',
-            mode: 'no-cors', // Esta línea evita el error de CORS
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-            });
+        // Agregar "orden" a los datos que se enviarán a Google Sheets
+        const data = {
+        orden,  // Agregado el campo "Orden"
+        nombre,
+        vendedor,
+        descuento,
+        subtotal,
+        totalFinal,
+        items
+        };
 
-            }
+        const response = await fetch('https://script.google.com/macros/s/AKfycbwK1-MPiVU1cZn9pdpLjnSRrQL6tvZIbUzLslF6M0O9P9WZiMbrdM9SMLgcWsN00w0/exec', {
+        method: 'POST',
+        mode: 'no-cors', // Esta línea evita el error de CORS
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+        });
+        }
+
+        // Función para obtener el valor máximo de la columna
+        function orden() {
+
+        const apiKey = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q'; 
+        const spreadsheetId = '1q_wXZ9DRG9mgSk3-ppA9Wa3dMA-nIR1R2rfVTkYvSg4'; 
+        const range = 'Ventas!B2:B';  
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+        // Los valores se encuentran en data.values, que es un array de arrays
+        const valores = data.values.map(item => parseFloat(item[0])).filter(val => !isNaN(val));
+        const orden = Math.max(...valores);
+
+        // Mostrar el número mayor en el contenedor
+        document.getElementById("orden").innerText = `${orden}`;
+        })
+        .catch(error => console.error("Error al obtener los datos:", error));
+        }
+
+        // Llamar a la función para obtener el número mayor
+        orden();
 
     </script>
 </body>
