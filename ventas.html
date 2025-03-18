@@ -34,9 +34,9 @@
             height: 90px;
         }
         .back-button {
-            background-color: rgb(139, 139, 139);
+            background-color: rgb(179, 178, 178);
             color: white;
-            padding: 10px 15px;
+            padding: 5px 10px;
             text-decoration: none;
             border-radius: 5px;
         }
@@ -48,6 +48,9 @@
             border: 1px solid black; 
             padding: 10px; 
             text-align: center; 
+        }
+        th.descuento, td.descuento, th.subtotal, td.subtotal {
+            display: none;
         }
         .pagination {
             margin-top: 20px;
@@ -64,7 +67,15 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
-        
+        .filters {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }
+        .filters label, .filters input, .filters select {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -72,14 +83,21 @@
         <div class="header">
             <img src="logo.png" alt="Logo">
             <h2>Registo de Ventas</h2>
-            <button onclick="window.location.href = 'index.html'">Volver</button>
+            <button onclick="window.location.href = 'index.html'" class="back-button">Volver</button>
         </div>
         
-        <label for="name-filter">Nombre:</label>
-        <input type="text" id="name-filter" placeholder="Filtrar por Nombre">
-        
-        <label for="seller-filter">Vendedor:</label>
-        <input type="text" id="seller-filter" placeholder="Filtrar por Vendedor">
+        <div class="filters">
+            
+            <label for="name-filter">Nombre:</label>
+            <input type="text" id="name-filter" placeholder="Filtrar por Nombre">
+            
+            <label for="seller-filter">Vendedor:</label>
+            <select id="seller-filter">
+                <option value="">Todos</option>
+            </select>
+
+            <button id="reset-button">Reset</button>
+        </div>
 
         <br><br>
 
@@ -113,11 +131,27 @@
                     return;
                 }
                 allData = values;
+                populateSellerFilter();
                 sortData();
                 renderTable(getPaginatedData());
                 renderPagination();
             } catch (error) {
                 console.error("Error al obtener los datos:", error);
+            }
+        }
+
+        function populateSellerFilter() {
+            const headers = allData[0];
+            const vendedorIndex = headers.indexOf("Vendedor");
+            if (vendedorIndex !== -1) {
+                const uniqueSellers = [...new Set(allData.slice(1).map(row => row[vendedorIndex]))];
+                const sellerFilter = document.getElementById("seller-filter");
+                uniqueSellers.forEach(seller => {
+                    const option = document.createElement("option");
+                    option.value = seller;
+                    option.textContent = seller;
+                    sellerFilter.appendChild(option);
+                });
             }
         }
     
@@ -140,20 +174,26 @@
             const tableBody = document.getElementById("table-body");
             tableHeader.innerHTML = "";
             tableBody.innerHTML = "";
-    
+        
             // Crear encabezados de la tabla
             data[0].forEach(header => {
                 let th = document.createElement("th");
-                th.textContent = header;
+                th.textContent = header === "Vendedor" ? "Vr" : header; // Cambiar "Vendedor" a "Vr"
+                if (header === "Vendedor") th.classList.add("vendedor");
+                if (header === "Descuento") th.classList.add("descuento");
+                if (header === "SubTotal") th.classList.add("subtotal");
                 tableHeader.appendChild(th);
             });
-    
+        
             // Mostrar las filas (sin el encabezado)
             data.slice(1).forEach(row => {
                 let tr = document.createElement("tr");
-                row.forEach(cell => {
+                row.forEach((cell, index) => {
                     let td = document.createElement("td");
                     td.textContent = cell;
+                    if (data[0][index] === "Vendedor") td.classList.add("vendedor");
+                    if (data[0][index] === "Descuento") td.classList.add("descuento");
+                    if (data[0][index] === "SubTotal") td.classList.add("subtotal");
                     tr.appendChild(td);
                 });
                 tableBody.appendChild(tr);
@@ -209,6 +249,13 @@
             renderTable([headers, ...filteredRows]);
             renderPagination();
         }
+
+        // Función para resetear los filtros
+        function resetFilters() {
+            document.getElementById("name-filter").value = "";
+            document.getElementById("seller-filter").value = "";
+            applyFilter();
+        }
     
         // Llama a fetchData al cargar la página
         window.onload = fetchData;
@@ -216,6 +263,7 @@
         // Agrega eventos de entrada a los filtros para aplicar el filtro automáticamente
         document.getElementById("name-filter").addEventListener("input", applyFilter);
         document.getElementById("seller-filter").addEventListener("input", applyFilter);
+        document.getElementById("reset-button").addEventListener("click", resetFilters);
     </script>
     
 </body>
