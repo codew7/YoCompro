@@ -43,11 +43,13 @@
         table { 
             width: 100%; 
             border-collapse: collapse; 
+            table-layout: auto; /* Ajusta automáticamente el ancho de las columnas */
         }
         th, td { 
             border: 1px solid black; 
             padding: 10px; 
             text-align: center; 
+            width: auto; /* Permite que el ancho se ajuste al contenido */
         }
         th.descuento, td.descuento, th.subtotal, td.subtotal {
             display: none;

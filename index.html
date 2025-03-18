@@ -89,12 +89,14 @@
         table { 
             width: 100%; 
             border-collapse: collapse; 
+            table-layout: auto; /* Ajusta automáticamente el ancho de las columnas */
         }
         
         th, td { 
             border: 1px solid black; 
             padding: 10px; 
             text-align: center; 
+            width: auto; /* Permite que el ancho se ajuste al contenido */
         }
 
         table th:nth-child(2), 
@@ -271,23 +273,6 @@
         placeholder: "Seleccione artículo"
         });
         }
-
-    //    function compartirPresupuesto() {
-      //      //registrarEnGoogleSheets();
-        //    html2canvas(document.getElementById("presupuesto")).then(canvas => {
-          //      canvas.toBlob(blob => {
-            //        const file = new File([blob], "presupuesto.png", { type: "image/png" });
-              //      if (navigator.share) {
-                //        navigator.share({
-                  //          title: 'Presupuesto',
-                    //        files: [file]
-                      //  }).catch(error => console.error('Error al compartir:', error));
-                    //} else {
-                    //    alert('La función de compartir no es compatible con este navegador.');
-                    //}
-                //});
-            //});
-        //}
 
         function compartirPresupuesto() {
             // Ocultar los botones antes de capturar
