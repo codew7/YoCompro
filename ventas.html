@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabla de Ventas</title>
+    <title>Registro de Ventas</title>
     <style>
         body, input, label, button, table, th, td {
             font-family: Arial, sans-serif;
@@ -33,10 +33,10 @@
             margin-bottom: 20px;
         }
         .header img {
-            height: 50px;
+            height: 90px;
         }
         .back-button {
-            background-color: black;
+            background-color: rgb(139, 139, 139);
             color: white;
             padding: 10px 15px;
             text-decoration: none;
@@ -51,6 +51,7 @@
             padding: 10px; 
             text-align: center; 
         }
+
     </style>
 </head>
 <body>
@@ -61,18 +62,13 @@
             <a href="https://codew7.github.io/Test/" class="back-button">Volver</a>
         </div>
         
-        <label for="start-date">Desde:</label>
-        <input type="date" id="start-date">
-        <label for="end-date">Hasta:</label>
-        <input type="date" id="end-date">
-        
         <label for="name-filter">Nombre:</label>
         <input type="text" id="name-filter" placeholder="Filtrar por Nombre">
         
         <label for="seller-filter">Vendedor:</label>
         <input type="text" id="seller-filter" placeholder="Filtrar por Vendedor">
-        
-        <button onclick="fetchData()">Filtrar</button>
+
+        <br><br>
 
         <table>
             <thead>
@@ -85,9 +81,11 @@
     <script>
         const apiKey = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q';
         const spreadsheetId = '1q_wXZ9DRG9mgSk3-ppA9Wa3dMA-nIR1R2rfVTkYvSg4';
-        const range = 'Ventas!A:G';
+        const range = 'Ventas!A:H';
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
-
+        
+        let allData = [];
+    
         async function fetchData() {
             try {
                 const response = await fetch(url);
@@ -97,27 +95,28 @@
                     alert("No se encontraron datos.");
                     return;
                 }
-                renderTable(values);
+                allData = values;
+                renderTable(allData);
             } catch (error) {
                 console.error("Error al obtener los datos:", error);
             }
         }
-
+    
         function renderTable(data) {
             const tableHeader = document.getElementById("table-header");
             const tableBody = document.getElementById("table-body");
             tableHeader.innerHTML = "";
             tableBody.innerHTML = "";
-            
+    
+            // Crear encabezados de la tabla
             data[0].forEach(header => {
                 let th = document.createElement("th");
                 th.textContent = header;
                 tableHeader.appendChild(th);
             });
-            
-            let filteredData = data.slice(1);
-            const last20Rows = filteredData.slice(-20);
-            last20Rows.forEach(row => {
+    
+            // Mostrar las filas (sin el encabezado)
+            data.slice(1).forEach(row => {
                 let tr = document.createElement("tr");
                 row.forEach(cell => {
                     let td = document.createElement("td");
@@ -127,8 +126,45 @@
                 tableBody.appendChild(tr);
             });
         }
-
+    
+        // Función para filtrar los datos según los filtros establecidos
+        function applyFilter() {
+            // Obtén los valores de los filtros
+            const nameFilter = document.getElementById("name-filter").value.toLowerCase();
+            const sellerFilter = document.getElementById("seller-filter").value.toLowerCase();
+            
+            // Suponiendo que la primera fila tiene los encabezados
+            const headers = allData[0];
+            // Ajusta estos nombres según tus encabezados reales
+            const nombreIndex = headers.indexOf("Nombre");
+            const vendedorIndex = headers.indexOf("Vendedor");
+    
+            // Filtra las filas (excluyendo el encabezado)
+            const filteredRows = allData.slice(1).filter(row => {
+                let include = true;
+    
+                // Filtro por nombre
+                if (nameFilter && nombreIndex !== -1 && row[nombreIndex] && !row[nombreIndex].toLowerCase().includes(nameFilter)) {
+                    include = false;
+                }
+                // Filtro por vendedor
+                if (sellerFilter && vendedorIndex !== -1 && row[vendedorIndex] && !row[vendedorIndex].toLowerCase().includes(sellerFilter)) {
+                    include = false;
+                }
+                return include;
+            });
+    
+            // Renderiza la tabla con el encabezado y las filas filtradas
+            renderTable([headers, ...filteredRows]);
+        }
+    
+        // Llama a fetchData al cargar la página
         window.onload = fetchData;
+
+        // Agrega eventos de entrada a los filtros para aplicar el filtro automáticamente
+        document.getElementById("name-filter").addEventListener("input", applyFilter);
+        document.getElementById("seller-filter").addEventListener("input", applyFilter);
     </script>
+    
 </body>
 </html>
