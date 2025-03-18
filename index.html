@@ -280,7 +280,7 @@
 
         function compartirPresupuesto() {
             // Ocultar los botones antes de capturar
-            const actionsDiv = document.querySelector('.actions');
+            const actionsDiv = document.querySelectorAll('button');
             actionsDiv.style.display = 'none';
 
             html2canvas(document.getElementById("presupuesto")).then(canvas => {
