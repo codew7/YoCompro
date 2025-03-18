@@ -272,20 +272,43 @@
         });
         }
 
+    //    function compartirPresupuesto() {
+      //      //registrarEnGoogleSheets();
+        //    html2canvas(document.getElementById("presupuesto")).then(canvas => {
+          //      canvas.toBlob(blob => {
+            //        const file = new File([blob], "presupuesto.png", { type: "image/png" });
+              //      if (navigator.share) {
+                //        navigator.share({
+                  //          title: 'Presupuesto',
+                    //        files: [file]
+                      //  }).catch(error => console.error('Error al compartir:', error));
+                    //} else {
+                    //    alert('La función de compartir no es compatible con este navegador.');
+                    //}
+                //});
+            //});
+        //}
+
         function compartirPresupuesto() {
-            registrarEnGoogleSheets();
+            // Ocultar los botones antes de capturar
+            const actionsDiv = document.querySelector('.actions');
+            actionsDiv.style.display = 'none';
+
             html2canvas(document.getElementById("presupuesto")).then(canvas => {
-                canvas.toBlob(blob => {
-                    const file = new File([blob], "presupuesto.png", { type: "image/png" });
-                    if (navigator.share) {
-                        navigator.share({
-                            title: 'Presupuesto',
-                            files: [file]
-                        }).catch(error => console.error('Error al compartir:', error));
-                    } else {
-                        alert('La función de compartir no es compatible con este navegador.');
-                    }
-                });
+            // Restaurar los botones después de capturar
+            actionsDiv.style.display = '';
+
+            canvas.toBlob(blob => {
+                const file = new File([blob], "presupuesto.png", { type: "image/png" });
+                if (navigator.share) {
+                navigator.share({
+                    title: 'Presupuesto',
+                    files: [file]
+                }).catch(error => console.error('Error al compartir:', error));
+                } else {
+                alert('La función de compartir no es compatible con este navegador.');
+                }
+            });
             });
         }
 
