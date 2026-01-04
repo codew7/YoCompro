@@ -101,6 +101,16 @@
         text-align: left;
         }
 
+        /* Centrar columnas Cant, ValorU y Total */
+        table th:nth-child(1), 
+        table td:nth-child(1),
+        table th:nth-child(3), 
+        table td:nth-child(3),
+        table th:nth-child(4), 
+        table td:nth-child(4) {
+        text-align: center;
+        }
+
         th:nth-child(1), td:nth-child(1) { 
             width: 5%; 
         }
@@ -246,6 +256,15 @@
             /* Centrar valores en columnas Cant, ValorU y Total */
             td:nth-child(1), td:nth-child(3), td:nth-child(4) {
                 text-align: center !important;
+            }
+
+            /* Formatear valores con $ y separador de miles en vista de impresión */
+            .valor-print::before {
+                content: attr(data-print-value);
+            }
+
+            .total-print::before {
+                content: attr(data-print-value);
             }
 
             table {
@@ -423,13 +442,14 @@
         }
 
         function formatearParaImpresion() {
-            // Formatear valores en la tabla con $ y separador de miles
+            // Formatear valores en la tabla con $ y separador de miles (punto)
             document.querySelectorAll('#items tr').forEach(row => {
                 const valorInput = row.querySelector('.valor');
                 const totalCell = row.querySelector('.total');
                 
                 if (valorInput && valorInput.value) {
-                    const valorFormateado = '$' + parseInt(valorInput.value).toLocaleString('es-AR');
+                    const valorNumerico = parseInt(valorInput.value);
+                    const valorFormateado = '$' + valorNumerico.toLocaleString('de-DE'); // Usa punto como separador
                     valorInput.setAttribute('data-original', valorInput.value);
                     valorInput.value = valorFormateado;
                 }
@@ -437,7 +457,8 @@
                 if (totalCell) {
                     const totalText = totalCell.innerText.replace('$', '').replace(/[^0-9]/g, '');
                     if (totalText) {
-                        totalCell.innerText = '$' + parseInt(totalText).toLocaleString('es-AR');
+                        const totalNumerico = parseInt(totalText);
+                        totalCell.innerText = '$' + totalNumerico.toLocaleString('de-DE'); // Usa punto como separador
                     }
                 }
             });
