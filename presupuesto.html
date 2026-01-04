@@ -149,8 +149,13 @@
         margin-right: 10px;
         }
 
-        /* Estilos para impresión - formato recibo/factura */
+        /* Estilos para impresión - formato recibo/factura adaptable */
         @media print {
+            @page {
+                size: auto;
+                margin: 10mm;
+            }
+
             body {
                 background-color: white;
                 margin: 0;
@@ -158,44 +163,44 @@
             }
 
             .container {
-                width: 80mm;
+                width: 100%;
                 max-width: 100%;
-                margin: 0;
-                padding: 10px;
+                margin: 0 auto;
+                padding: 15px;
                 border-radius: 0;
                 box-shadow: none;
             }
 
             .encabezado {
                 text-align: center;
-                margin-bottom: 10px;
+                margin-bottom: 15px;
                 border-bottom: 1px dashed #000;
-                padding-bottom: 10px;
+                padding-bottom: 15px;
             }
 
             .encabezado h3 {
-                font-size: 16px;
+                font-size: 18px;
                 margin: 5px 0;
                 text-align: left;
             }
 
             .encabezado p {
-                font-size: 11px;
-                margin: 2px 0;
+                font-size: 13px;
+                margin: 3px 0;
             }
 
             .encabezado img {
-                max-width: 60px;
+                max-width: 80px;
             }
 
             .header {
-                margin-bottom: 10px;
+                margin-bottom: 15px;
                 border-bottom: 1px dashed #000;
-                padding-bottom: 8px;
+                padding-bottom: 10px;
             }
 
             .header label {
-                font-size: 12px;
+                font-size: 14px;
             }
 
             /* Ocultar inputs y mostrar solo valores en impresión */
@@ -203,22 +208,23 @@
                 border: none;
                 background: transparent;
                 padding: 0;
-                font-size: 11px;
+                font-size: 13px;
                 font-weight: normal;
             }
 
             label {
-                font-size: 11px;
+                font-size: 13px;
             }
 
             table {
-                font-size: 11px;
-                margin-top: 5px;
+                font-size: 13px;
+                margin-top: 10px;
+                width: 100%;
             }
 
             th, td {
-                padding: 5px 3px;
-                font-size: 11px;
+                padding: 8px 5px;
+                font-size: 13px;
             }
 
             th {
@@ -226,15 +232,15 @@
             }
 
             .totals {
-                margin-top: 10px;
+                margin-top: 15px;
                 border-top: 1px dashed #000;
-                padding-top: 10px;
-                font-size: 12px;
+                padding-top: 15px;
+                font-size: 14px;
             }
 
             .totals label {
-                font-size: 12px;
-                margin: 3px 0;
+                font-size: 14px;
+                margin: 5px 0;
             }
 
             /* Ocultar botones y elementos no necesarios en impresión */
