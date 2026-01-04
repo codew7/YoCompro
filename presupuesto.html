@@ -101,16 +101,6 @@
         text-align: left;
         }
 
-        /* Centrar columnas Cant, ValorU y Total */
-        table th:nth-child(1), 
-        table td:nth-child(1),
-        table th:nth-child(3), 
-        table td:nth-child(3),
-        table th:nth-child(4), 
-        table td:nth-child(4) {
-        text-align: center;
-        }
-
         th:nth-child(1), td:nth-child(1) { 
             width: 5%; 
         }
@@ -210,6 +200,11 @@
                 margin: 2px 0;
             }
 
+            #fecha {
+                text-align: left;
+                margin: 5px 0;
+            }
+
             .encabezado img {
                 max-width: 60px;
             }
@@ -233,7 +228,7 @@
             }
 
             /* Ocultar inputs y mostrar solo valores en impresión */
-            input, select {
+            input {
                 border: none;
                 background: transparent;
                 padding: 0;
@@ -243,28 +238,8 @@
                 max-width: 100%;
             }
 
-            select {
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                appearance: none;
-            }
-
             label {
                 font-size: 11px;
-            }
-
-            /* Centrar valores en columnas Cant, ValorU y Total */
-            td:nth-child(1), td:nth-child(3), td:nth-child(4) {
-                text-align: center !important;
-            }
-
-            /* Formatear valores con $ y separador de miles en vista de impresión */
-            .valor-print::before {
-                content: attr(data-print-value);
-            }
-
-            .total-print::before {
-                content: attr(data-print-value);
             }
 
             table {
@@ -310,12 +285,18 @@
                 font-size: 12px;
                 width: 100%;
                 overflow: visible;
+                text-align: right;
             }
 
             .totals label {
                 font-size: 12px;
                 margin: 3px 0;
                 display: block;
+                text-align: right;
+            }
+
+            #formaPago {
+                display: none;
             }
 
             /* Ocultar botones y elementos no necesarios en impresión */
@@ -345,23 +326,22 @@
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; vertical-align: middle;">
-            <div>
-                <h3 style="margin: 0;">Presupuesto</h3>
-                <p id="fecha" style="margin: 5px 0; text-align: left;"></p>
-            </div>
+            <h3>Presupuesto</h3>
             <p>Tel. 266 4328198  <img src="whatsapp.png" alt="WhatsApp" class="whatsapp-icon"></p>
             </div>
+
+            <p id="fecha"></p>
                 
         </div>
         
 
         <div class="header">
             <label>Nombre: <input type="text" id="nombre"></label>
-            <br>
+          <br>
             <label>Domicilio: <input type="text" id="domicilio"></label>
-            <br>
+          <br>
             <label>Teléfono: <input type="text" id="telefono"></label>
-            <br>
+          <br>
         </div>
 
         <table>
@@ -387,13 +367,12 @@
         <div class="totals">
             <label>Subtotal: $<span id="subtotal">0</span></label>
         <br>
-            <label>Descuento: $<input type="number" id="descuento" value="" oninput="calcularTotales()"></label>
+            <label>Descuento: $ <input type="number" id="descuento" value="" oninput="calcularTotales()"></label>
         <br>
             <label>Total Final: $<span id="totalFinal">0</span></label>
         <br>
-            <label>Forma de Pago: 
+            <label>Forma Pago: 
                 <select id="formaPago">
-                    <option value="" selected disabled>Seleccione</option>
                     <option value="Efectivo">Efectivo</option>
                     <option value="MercadoPago">MercadoPago</option>
                 </select>
@@ -420,14 +399,14 @@
         function calcularTotales() {
             let subtotal = 0;
             document.querySelectorAll('#items tr').forEach(row => {
-                let cantidad = row.querySelector('.cantidad').value || 0;
-                let valor = row.querySelector('.valor').value || 0;
+                let cantidad = parseInt(row.querySelector('.cantidad').value) || 0;
+                let valor = parseInt(row.querySelector('.valor').value) || 0;
                 let total = cantidad * valor;
-                row.querySelector('.total').innerText = `$${total}`;
+                row.querySelector('.total').innerText = `$${total.toLocaleString('es-ES')}`;
                 subtotal += total;
             });
             document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-ES');
-            let descuento = document.getElementById('descuento').value || 0;
+            let descuento = parseInt(document.getElementById('descuento').value) || 0;
             document.getElementById('totalFinal').innerText = (subtotal - descuento).toLocaleString('es-ES');
         }
 
@@ -441,45 +420,8 @@
             document.getElementById('items').insertAdjacentHTML('beforeend', fila);
         }
 
-        function formatearParaImpresion() {
-            // Formatear valores en la tabla con $ y separador de miles (punto)
-            document.querySelectorAll('#items tr').forEach(row => {
-                const valorInput = row.querySelector('.valor');
-                const totalCell = row.querySelector('.total');
-                
-                if (valorInput && valorInput.value) {
-                    const valorNumerico = parseInt(valorInput.value);
-                    const valorFormateado = '$' + valorNumerico.toLocaleString('de-DE'); // Usa punto como separador
-                    valorInput.setAttribute('data-original', valorInput.value);
-                    valorInput.value = valorFormateado;
-                }
-                
-                if (totalCell) {
-                    const totalText = totalCell.innerText.replace('$', '').replace(/[^0-9]/g, '');
-                    if (totalText) {
-                        const totalNumerico = parseInt(totalText);
-                        totalCell.innerText = '$' + totalNumerico.toLocaleString('de-DE'); // Usa punto como separador
-                    }
-                }
-            });
-        }
-
-        function restaurarDespuesDeImpresion() {
-            // Restaurar valores originales después de imprimir
-            document.querySelectorAll('#items tr').forEach(row => {
-                const valorInput = row.querySelector('.valor');
-                if (valorInput && valorInput.hasAttribute('data-original')) {
-                    valorInput.value = valorInput.getAttribute('data-original');
-                    valorInput.removeAttribute('data-original');
-                }
-            });
-            calcularTotales();
-        }
-
         function compartirPresupuesto() {
-            formatearParaImpresion();
             window.print();
-            setTimeout(restaurarDespuesDeImpresion, 100);
         }
 
         function nuevoPresupuesto() {
@@ -487,7 +429,7 @@
             document.getElementById('domicilio').value = "";
             document.getElementById('telefono').value = "";
             document.getElementById('descuento').value = 0;
-            document.getElementById('formaPago').value = "";
+            document.getElementById('formaPago').value = "Efectivo";
             document.getElementById('subtotal').innerText = 0;
             document.getElementById('totalFinal').innerText = 0;
             document.getElementById('items').innerHTML = `<tr>
