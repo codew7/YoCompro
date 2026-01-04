@@ -153,54 +153,69 @@
         @media print {
             @page {
                 size: auto;
-                margin: 10mm;
+                margin: 15mm;
+            }
+
+            * {
+                box-sizing: border-box;
             }
 
             body {
                 background-color: white;
                 margin: 0;
                 padding: 0;
+                width: 100%;
             }
 
             .container {
                 width: 100%;
                 max-width: 100%;
-                margin: 0 auto;
-                padding: 15px;
+                margin: 0;
+                padding: 10px;
                 border-radius: 0;
                 box-shadow: none;
+                overflow: visible;
             }
 
             .encabezado {
                 text-align: center;
-                margin-bottom: 15px;
+                margin-bottom: 10px;
                 border-bottom: 1px dashed #000;
-                padding-bottom: 15px;
+                padding-bottom: 10px;
+                overflow: visible;
             }
 
             .encabezado h3 {
-                font-size: 18px;
+                font-size: 16px;
                 margin: 5px 0;
                 text-align: left;
             }
 
             .encabezado p {
-                font-size: 13px;
-                margin: 3px 0;
+                font-size: 11px;
+                margin: 2px 0;
             }
 
             .encabezado img {
-                max-width: 80px;
+                max-width: 60px;
+            }
+
+            .encabezado > div {
+                overflow: visible;
             }
 
             .header {
-                margin-bottom: 15px;
+                margin-bottom: 10px;
                 border-bottom: 1px dashed #000;
-                padding-bottom: 10px;
+                padding-bottom: 8px;
+                width: 100%;
+                overflow: visible;
             }
 
             .header label {
-                font-size: 14px;
+                font-size: 12px;
+                display: block;
+                word-wrap: break-word;
             }
 
             /* Ocultar inputs y mostrar solo valores en impresión */
@@ -208,23 +223,46 @@
                 border: none;
                 background: transparent;
                 padding: 0;
-                font-size: 13px;
+                font-size: 11px;
                 font-weight: normal;
+                width: auto !important;
+                max-width: 100%;
             }
 
             label {
-                font-size: 13px;
+                font-size: 11px;
             }
 
             table {
-                font-size: 13px;
-                margin-top: 10px;
+                font-size: 11px;
+                margin-top: 5px;
                 width: 100%;
+                table-layout: fixed;
+                border-collapse: collapse;
             }
 
             th, td {
-                padding: 8px 5px;
-                font-size: 13px;
+                padding: 5px 2px;
+                font-size: 11px;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            /* Ajustar anchos de columnas para evitar desbordamiento */
+            th:nth-child(1), td:nth-child(1) {
+                width: 10%;
+            }
+
+            th:nth-child(2), td:nth-child(2) {
+                width: 50%;
+            }
+
+            th:nth-child(3), td:nth-child(3) {
+                width: 20%;
+            }
+
+            th:nth-child(4), td:nth-child(4) {
+                width: 20%;
             }
 
             th {
@@ -232,15 +270,18 @@
             }
 
             .totals {
-                margin-top: 15px;
+                margin-top: 10px;
                 border-top: 1px dashed #000;
-                padding-top: 15px;
-                font-size: 14px;
+                padding-top: 10px;
+                font-size: 12px;
+                width: 100%;
+                overflow: visible;
             }
 
             .totals label {
-                font-size: 14px;
-                margin: 5px 0;
+                font-size: 12px;
+                margin: 3px 0;
+                display: block;
             }
 
             /* Ocultar botones y elementos no necesarios en impresión */
@@ -313,7 +354,7 @@
         <br>
         </div>
         <div class="actions">
-            <button onclick="compartirPresupuesto()">Compartir</button>
+            <button onclick="compartirPresupuesto()">Imprimir</button>
             <button onclick="nuevoPresupuesto()">Nuevo</button>
         </div>
     </div>
