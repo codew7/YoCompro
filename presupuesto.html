@@ -134,8 +134,12 @@
             width: 35px; 
         }
 
-        #nombre { 
+        #nombre, #domicilio, #telefono { 
             width: 250px; 
+        }
+
+        #formaPago {
+            width: 150px;
         }
 
         .articulo {
@@ -219,7 +223,7 @@
             }
 
             /* Ocultar inputs y mostrar solo valores en impresión */
-            input {
+            input, select {
                 border: none;
                 background: transparent;
                 padding: 0;
@@ -229,8 +233,19 @@
                 max-width: 100%;
             }
 
+            select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+            }
+
             label {
                 font-size: 11px;
+            }
+
+            /* Centrar valores en columnas Cant, ValorU y Total */
+            td:nth-child(1), td:nth-child(3), td:nth-child(4) {
+                text-align: center !important;
             }
 
             table {
@@ -311,18 +326,23 @@
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; vertical-align: middle;">
-            <h3>Presupuesto</h3>
+            <div>
+                <h3 style="margin: 0;">Presupuesto</h3>
+                <p id="fecha" style="margin: 5px 0; text-align: left;"></p>
+            </div>
             <p>Tel. 266 4328198  <img src="whatsapp.png" alt="WhatsApp" class="whatsapp-icon"></p>
             </div>
-
-            <p id="fecha"></p>
                 
         </div>
         
 
         <div class="header">
             <label>Nombre: <input type="text" id="nombre"></label>
-          <br>
+            <br>
+            <label>Domicilio: <input type="text" id="domicilio"></label>
+            <br>
+            <label>Teléfono: <input type="text" id="telefono"></label>
+            <br>
         </div>
 
         <table>
@@ -348,9 +368,17 @@
         <div class="totals">
             <label>Subtotal: $<span id="subtotal">0</span></label>
         <br>
-            <label>Descuento: $ <input type="number" id="descuento" value="" oninput="calcularTotales()"></label>
+            <label>Descuento: $<input type="number" id="descuento" value="" oninput="calcularTotales()"></label>
         <br>
             <label>Total Final: $<span id="totalFinal">0</span></label>
+        <br>
+            <label>Forma de Pago: 
+                <select id="formaPago">
+                    <option value="" selected disabled>Seleccione</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="MercadoPago">MercadoPago</option>
+                </select>
+            </label>
         <br>
         </div>
         <div class="actions">
@@ -394,13 +422,51 @@
             document.getElementById('items').insertAdjacentHTML('beforeend', fila);
         }
 
+        function formatearParaImpresion() {
+            // Formatear valores en la tabla con $ y separador de miles
+            document.querySelectorAll('#items tr').forEach(row => {
+                const valorInput = row.querySelector('.valor');
+                const totalCell = row.querySelector('.total');
+                
+                if (valorInput && valorInput.value) {
+                    const valorFormateado = '$' + parseInt(valorInput.value).toLocaleString('es-AR');
+                    valorInput.setAttribute('data-original', valorInput.value);
+                    valorInput.value = valorFormateado;
+                }
+                
+                if (totalCell) {
+                    const totalText = totalCell.innerText.replace('$', '').replace(/[^0-9]/g, '');
+                    if (totalText) {
+                        totalCell.innerText = '$' + parseInt(totalText).toLocaleString('es-AR');
+                    }
+                }
+            });
+        }
+
+        function restaurarDespuesDeImpresion() {
+            // Restaurar valores originales después de imprimir
+            document.querySelectorAll('#items tr').forEach(row => {
+                const valorInput = row.querySelector('.valor');
+                if (valorInput && valorInput.hasAttribute('data-original')) {
+                    valorInput.value = valorInput.getAttribute('data-original');
+                    valorInput.removeAttribute('data-original');
+                }
+            });
+            calcularTotales();
+        }
+
         function compartirPresupuesto() {
+            formatearParaImpresion();
             window.print();
+            setTimeout(restaurarDespuesDeImpresion, 100);
         }
 
         function nuevoPresupuesto() {
             document.getElementById('nombre').value = "";
+            document.getElementById('domicilio').value = "";
+            document.getElementById('telefono').value = "";
             document.getElementById('descuento').value = 0;
+            document.getElementById('formaPago').value = "";
             document.getElementById('subtotal').innerText = 0;
             document.getElementById('totalFinal').innerText = 0;
             document.getElementById('items').innerHTML = `<tr>
