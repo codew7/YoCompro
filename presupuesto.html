@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yo Compro</title>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
     <style>
 
@@ -150,6 +149,110 @@
         margin-right: 10px;
         }
 
+        /* Estilos para impresión - formato recibo/factura */
+        @media print {
+            body {
+                background-color: white;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                width: 80mm;
+                max-width: 100%;
+                margin: 0;
+                padding: 10px;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .encabezado {
+                text-align: center;
+                margin-bottom: 10px;
+                border-bottom: 1px dashed #000;
+                padding-bottom: 10px;
+            }
+
+            .encabezado h3 {
+                font-size: 16px;
+                margin: 5px 0;
+                text-align: left;
+            }
+
+            .encabezado p {
+                font-size: 11px;
+                margin: 2px 0;
+            }
+
+            .encabezado img {
+                max-width: 60px;
+            }
+
+            .header {
+                margin-bottom: 10px;
+                border-bottom: 1px dashed #000;
+                padding-bottom: 8px;
+            }
+
+            .header label {
+                font-size: 12px;
+            }
+
+            /* Ocultar inputs y mostrar solo valores en impresión */
+            input {
+                border: none;
+                background: transparent;
+                padding: 0;
+                font-size: 11px;
+                font-weight: normal;
+            }
+
+            label {
+                font-size: 11px;
+            }
+
+            table {
+                font-size: 11px;
+                margin-top: 5px;
+            }
+
+            th, td {
+                padding: 5px 3px;
+                font-size: 11px;
+            }
+
+            th {
+                background-color: #f0f0f0;
+            }
+
+            .totals {
+                margin-top: 10px;
+                border-top: 1px dashed #000;
+                padding-top: 10px;
+                font-size: 12px;
+            }
+
+            .totals label {
+                font-size: 12px;
+                margin: 3px 0;
+            }
+
+            /* Ocultar botones y elementos no necesarios en impresión */
+            .actions,
+            button {
+                display: none !important;
+            }
+
+            .whatsapp-icon {
+                display: none;
+            }
+
+            /* Ajustar totales para formato recibo */
+            #subtotal, #descuento, #totalFinal {
+                font-weight: bold;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -245,26 +348,7 @@
         }
 
         function compartirPresupuesto() {
-            // Ocultar los botones antes de capturar
-            const actionsDiv = document.querySelector('.actions');
-            actionsDiv.style.display = 'none';
-
-            html2canvas(document.getElementById("presupuesto")).then(canvas => {
-            // Restaurar los botones después de capturar
-            actionsDiv.style.display = '';
-
-            canvas.toBlob(blob => {
-                const file = new File([blob], "presupuesto.png", { type: "image/png" });
-                if (navigator.share) {
-                navigator.share({
-                    title: 'Presupuesto',
-                    files: [file]
-                }).catch(error => console.error('Error al compartir:', error));
-                } else {
-                alert('La función de compartir no es compatible con este navegador.');
-                }
-            });
-            });
+            window.print();
         }
 
         function nuevoPresupuesto() {
