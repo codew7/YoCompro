@@ -42,10 +42,22 @@
         }
         
         .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: left; 
-            margin-bottom: 20px; 
+            display: block;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .header label {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .header label input {
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .encabezado {
@@ -127,19 +139,17 @@
 
         /* Estilos específicos para los campos */
         #descuento { 
-            width: 55px; 
+            width: auto;
+            max-width: 40px;
         }
 
         #vendedor { 
             width: 35px; 
         }
 
-        #nombre, #domicilio, #telefono { 
-            width: 250px; 
-        }
-
         #formaPago {
-            width: 150px;
+            width: auto;
+            min-width: 80px;
         }
 
         .articulo {
@@ -157,7 +167,7 @@
         @media print {
             @page {
                 size: auto;
-                margin: 15mm;
+                margin: 10mm;
             }
 
             * {
@@ -259,15 +269,26 @@
 
             /* Ajustar anchos de columnas para evitar desbordamiento */
             th:nth-child(1), td:nth-child(1) {
-                width: 10%;
+                width: 10% !important;
+                text-align: center !important;
+            }
+
+            td:nth-child(1) input {
+                text-align: center !important;
             }
 
             th:nth-child(2), td:nth-child(2) {
                 width: 50%;
+                text-align: left !important;
             }
 
             th:nth-child(3), td:nth-child(3) {
-                width: 20%;
+                width: 20% !important;
+                text-align: center !important;
+            }
+
+            td:nth-child(3) input {
+                text-align: center !important;
             }
 
             th:nth-child(4), td:nth-child(4) {
@@ -291,12 +312,20 @@
             .totals label {
                 font-size: 12px;
                 margin: 3px 0;
-                display: block;
-                text-align: right;
+                display: block !important;
+                text-align: right !important;
+                width: 100% !important;
+            }
+
+            .totals label input {
+                text-align: right !important;
             }
 
             #formaPago {
-                display: none;
+                display: inline !important;
+                border: none;
+                background: transparent;
+                font-size: 12px;
             }
 
             /* Ocultar botones y elementos no necesarios en impresión */
@@ -337,11 +366,8 @@
 
         <div class="header">
             <label>Nombre: <input type="text" id="nombre"></label>
-          <br>
             <label>Domicilio: <input type="text" id="domicilio"></label>
-          <br>
             <label>Teléfono: <input type="text" id="telefono"></label>
-          <br>
         </div>
 
         <table>
@@ -367,7 +393,7 @@
         <div class="totals">
             <label>Subtotal: $<span id="subtotal">0</span></label>
         <br>
-            <label>Descuento: $ <input type="number" id="descuento" value="" oninput="calcularTotales()"></label>
+            <label>Descuento: $ <input type="number" id="descuento" value="0" oninput="calcularTotales()"></label>
         <br>
             <label>Total Final: $<span id="totalFinal">0</span></label>
         <br>
