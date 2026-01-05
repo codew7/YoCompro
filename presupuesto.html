@@ -6,151 +6,361 @@
     <title>Yo Compro</title>
 
     <style>
+        /* Reset y estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* Para navegadores como Chrome, Safari y Edge */
+        /* Ocultar flechas de input number */
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+            -webkit-appearance: none;
+            margin: 0;
         }
 
-        /* Estilos globales para la fuente y tamaño de letra */
-        body, input, label, button, table, th, td {
-            font-family: Arial, sans-serif;
-            font-size: 14px; /* Puedes ajustar el tamaño según prefieras */
+        input[type="number"] {
+            -moz-appearance: textfield;
         }
 
-        label {
-            font-family: Arial, sans-serif;
-            font-size: 14px; /* Puedes ajustar el tamaño según prefieras */
-            font-weight: bold; /* Aplica negrita */
+        /* Estilos globales */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            color: #2c3e50;
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
         }
 
-        body { 
-            background-color: #f1e31f; 
-            color: black; 
-            text-align: center; 
-        }
-        .container { 
-            background: white; 
-            color: black; 
- 
-            margin: auto;   
-            padding: 15px; 
-            border-radius: 10px; 
-            position: relative;
-        }
-        
-        .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: left; 
-            margin-bottom: 20px; 
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 30px;
         }
 
+        /* Encabezado */
         .encabezado {
-            text-align: left; /* Alinea el encabezado al centro */
-            margin-bottom: 20px; /* Espacio debajo del encabezado */
-            vertical-align: top;
+            border-bottom: 2px solid #e1e8ed;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
         }
 
-        .encabezado h1 {
-            margin: 0;
+        .encabezado-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .encabezado p {
-            margin: 0;
-            font-size: 14px;
+        .encabezado-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .encabezado img {
-            max-width: 90px; /* Ajusta el tamaño del logo */
-            margin-right: 10px; /* Espacio a la derecha del logo */
-            align-items: center;
+            max-width: 80px;
+            height: auto;
         }
 
-        .totals { 
-            display: flex; 
-            justify-content: flex-end; 
-            flex-direction: column; 
-            align-items: flex-end; 
-            margin-top: 20px; 
-        }
-        .actions { 
-            display: flex; 
-            justify-content: right; 
-            gap: 15px; 
-            margin-top: 20px; 
+        .encabezado h3 {
+            font-size: 24px;
+            color: #2c3e50;
+            font-weight: 600;
         }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            table-layout: auto; /* Ajusta automáticamente el ancho de las columnas */
-        }
-        
-        th, td { 
-            border: 1px solid black; 
-            padding: 10px; 
-            text-align: center; 
-            width: auto; /* Permite que el ancho se ajuste al contenido */
-        }
-
-        table th:nth-child(2), 
-        table td:nth-child(2) {
-        text-align: left;
-        }
-
-        th:nth-child(1), td:nth-child(1) { 
-            width: 5%; 
-        }
-
-        th:nth-child(2), td:nth-child(2) { 
-            width: 65%; 
-        }
-
-        th:nth-child(3), td:nth-child(3) { 
-            width: 15%; 
-        }
-
-        th:nth-child(4), td:nth-child(4) { 
-            width: 15%; 
-        }
-
-        .cantidad, .articulo, .valor, .total, #descuento, #vendedor, #nombre {
-            width: 100%; /* Ajusta el tamaño de los campos */
-            padding: 1px; /* Espacio interno de los campos */
-            margin: 1px 0; /* Espacio externo de los campos */
-            box-sizing: border-box; /* Incluye el borde en el tamaño total */
-            
-        }
-
-        /* Estilos específicos para los campos */
-        #descuento { 
-            width: 55px; 
-        }
-
-        #vendedor { 
-            width: 35px; 
-        }
-
-        #nombre, #domicilio, #telefono { 
-            width: 250px; 
-        }
-
-        #formaPago {
-            width: 150px;
-        }
-
-        .articulo {
-            text-align: left;
+        .encabezado-contacto {
+            text-align: right;
+            font-size: 13px;
+            color: #5a6c7d;
         }
 
         .whatsapp-icon {
-        width: 22px;
-        height: 22px;
-        vertical-align: middle; /* Alinea la imagen con el texto */
-        margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        #fecha {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+
+        /* Sección de información del cliente */
+        .cliente-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: white;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        /* Tabla de artículos */
+        .tabla-section {
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            background: white;
+        }
+
+        thead {
+            background: #34495e;
+            color: white;
+        }
+
+        th {
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 10px 8px;
+            border: 1px solid #e1e8ed;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background: #e8f4f8;
+        }
+
+        table th:nth-child(2),
+        table td:nth-child(2) {
+            text-align: left;
+        }
+
+        th:nth-child(1), td:nth-child(1) {
+            width: 10%;
+        }
+
+        th:nth-child(2), td:nth-child(2) {
+            width: 50%;
+        }
+
+        th:nth-child(3), td:nth-child(3) {
+            width: 20%;
+        }
+
+        th:nth-child(4), td:nth-child(4) {
+            width: 20%;
+        }
+
+        .cantidad, .articulo, .valor {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e1e8ed;
+            border-radius: 3px;
+        }
+
+        .total {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Botones */
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-agregar {
+            background: #4a90e2;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .btn-agregar:hover {
+            background: #357abd;
+        }
+
+        /* Totales */
+        .totals {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+
+        .totals-grid {
+            display: grid;
+            gap: 12px;
+            max-width: 400px;
+            margin-left: auto;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .total-row.final {
+            border-top: 2px solid #34495e;
+            padding-top: 12px;
+            margin-top: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .total-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .total-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        #descuento {
+            width: 100px;
+            text-align: right;
+        }
+
+        /* Forma de pago */
+        .forma-pago-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        #formaPago {
+            width: 100%;
+            max-width: 200px;
+        }
+
+        /* Acciones */
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn-imprimir {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-imprimir:hover {
+            background: #229954;
+        }
+
+        .btn-nuevo {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-nuevo:hover {
+            background: #7f8c8d;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .encabezado-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .encabezado-contacto {
+                text-align: left;
+            }
+
+            .cliente-info {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px 4px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
         }
 
         /* Estilos para impresión - formato recibo/factura adaptable */
@@ -320,68 +530,90 @@
 <body>
     <div class="container" id="presupuesto">
         
+        <!-- Encabezado -->
         <div class="encabezado">
-            <div style="text-align: center;">
-                <img src="logo.png" alt="Logo">
+            <div class="encabezado-top">
+                <div class="encabezado-logo">
+                    <img src="logo.png" alt="Logo">
+                    <h3>Presupuesto</h3>
+                </div>
+                <div class="encabezado-contacto">
+                    <p>Tel. 266 4328198 <img src="whatsapp.png" alt="WhatsApp" class="whatsapp-icon"></p>
+                </div>
             </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; vertical-align: middle;">
-            <h3>Presupuesto</h3>
-            <p>Tel. 266 4328198  <img src="whatsapp.png" alt="WhatsApp" class="whatsapp-icon"></p>
-            </div>
-
             <p id="fecha"></p>
-                
         </div>
         
-
-        <div class="header">
-            <label>Nombre: <input type="text" id="nombre"></label>
-          <br>
-            <label>Domicilio: <input type="text" id="domicilio"></label>
-          <br>
-            <label>Teléfono: <input type="text" id="telefono"></label>
-          <br>
+        <!-- Información del Cliente -->
+        <div class="cliente-info">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre">
+            </div>
+            <div class="form-group">
+                <label for="domicilio">Domicilio</label>
+                <input type="text" id="domicilio">
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input type="text" id="telefono">
+            </div>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Cant</th>
-                    <th>Artículo</th>
-                    <th>ValorU.</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody id="items">
-                <tr>
-                    <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
-                    <td><input type="text" class="articulo"></td>
-                    <td><input type="number" class="valor" oninput="calcularTotales()"></td>
-                    <td class="total">$0</td>
-                </tr>
-            </tbody>
-        </table>
-      <br>
-        <button onclick="agregarFila()">Agregar Artículo</button>
+        <!-- Tabla de Artículos -->
+        <div class="tabla-section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cant</th>
+                        <th>Artículo</th>
+                        <th>Valor U.</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="items">
+                    <tr>
+                        <td><input type="number" class="cantidad" oninput="calcularTotales()"></td>
+                        <td><input type="text" class="articulo"></td>
+                        <td><input type="number" class="valor" oninput="calcularTotales()"></td>
+                        <td class="total">$0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn-agregar" onclick="agregarFila()">+ Agregar Artículo</button>
+        </div>
+
+        <!-- Totales -->
         <div class="totals">
-            <label>Subtotal: $<span id="subtotal">0</span></label>
-        <br>
-            <label>Descuento: $ <input type="number" id="descuento" value="" oninput="calcularTotales()"></label>
-        <br>
-            <label>Total Final: $<span id="totalFinal">0</span></label>
-        <br>
-            <label>Forma Pago: 
-                <select id="formaPago">
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="MercadoPago">MercadoPago</option>
-                </select>
-            </label>
-        <br>
+            <div class="totals-grid">
+                <div class="total-row">
+                    <span class="total-label">Subtotal:</span>
+                    <span class="total-value">$<span id="subtotal">0</span></span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Descuento:</span>
+                    <span>$<input type="number" id="descuento" value="0" oninput="calcularTotales()"></span>
+                </div>
+                <div class="total-row final">
+                    <span class="total-label">Total Final:</span>
+                    <span class="total-value">$<span id="totalFinal">0</span></span>
+                </div>
+                <div class="forma-pago-section">
+                    <div class="form-group">
+                        <label for="formaPago">Forma de Pago</label>
+                        <select id="formaPago">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="MercadoPago">MercadoPago</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Acciones -->
         <div class="actions">
-            <button onclick="compartirPresupuesto()">Imprimir</button>
-            <button onclick="nuevoPresupuesto()">Nuevo</button>
+            <button class="btn-imprimir" onclick="compartirPresupuesto()">Imprimir</button>
+            <button class="btn-nuevo" onclick="nuevoPresupuesto()">Nuevo</button>
         </div>
     </div>
     
