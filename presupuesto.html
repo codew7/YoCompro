@@ -27,13 +27,13 @@
         }
 
         body { 
-            background-color: #f1e31f; 
-            color: black; 
+            background-color: #838282; 
+            color: #333333; 
             text-align: center; 
         }
         .container { 
             background: white; 
-            color: black; 
+            color: #333333; 
  
             margin: auto;   
             padding: 15px; 
@@ -102,13 +102,12 @@
         }
         
         th, td { 
-            border: 1px solid black; 
+            border: 1px solid #d0d0d0; 
             padding: 10px; 
             text-align: center; 
             width: auto; /* Permite que el ancho se ajuste al contenido */
         }
 
-        table th:nth-child(2), 
         table td:nth-child(2) {
         text-align: left;
         }
@@ -194,7 +193,7 @@
             .encabezado {
                 text-align: center;
                 margin-bottom: 10px;
-                border-bottom: 1px dashed #000;
+                border-bottom: 1px dashed #666;
                 padding-bottom: 10px;
                 overflow: visible;
             }
@@ -219,13 +218,18 @@
                 max-width: 60px;
             }
 
+            .encabezado > div:first-child {
+                text-align: right !important;
+                overflow: visible;
+            }
+
             .encabezado > div {
                 overflow: visible;
             }
 
             .header {
                 margin-bottom: 10px;
-                border-bottom: 1px dashed #000;
+                border-bottom: 1px dashed #666;
                 padding-bottom: 8px;
                 width: 100%;
                 overflow: visible;
@@ -296,12 +300,12 @@
             }
 
             th {
-                background-color: #f0f0f0;
+                background-color: #e8e8e8;
             }
 
             .totals {
                 margin-top: 10px;
-                border-top: 1px dashed #000;
+                border-top: 1px dashed #666;
                 padding-top: 10px;
                 font-size: 12px;
                 width: 100%;
