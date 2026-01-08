@@ -533,7 +533,7 @@
             pdf.text('CANT', leftMargin, yPos);
             pdf.text('DESCRIPCIÓN', leftMargin + 15, yPos);
             pdf.text('PRECIO', leftMargin + 60, yPos);
-            pdf.text('IMPORTE', leftMargin + 75, yPos);
+            pdf.text('IMPORTE', leftMargin + 70, yPos);
             yPos += 4;
             
             // ==================== ITEMS DE LA TABLA ====================
@@ -557,7 +557,7 @@
                     pdf.text(articuloCorto, leftMargin + 15, yPos);
                     
                     // Precio unitario alineado a la derecha en su columna
-                    pdf.text(`$${parseInt(valor).toLocaleString('es-ES')}`, leftMargin + 72, yPos, { align: 'right' });
+                    pdf.text(`$${parseInt(valor).toLocaleString('es-ES')}`, leftMargin + 60, yPos, { align: 'right' });
                     
                     // Total alineado a la derecha
                     pdf.text(total, rightMargin, yPos, { align: 'right' });
