@@ -532,7 +532,7 @@
             pdf.setFontSize(8);
             pdf.text('CANT', leftMargin, yPos);
             pdf.text('DESCRIPCIÓN', leftMargin + 15, yPos);
-            pdf.text('PRECIO', leftMargin + 58, yPos);
+            pdf.text('PRECIO', leftMargin + 55, yPos);
             pdf.text('IMPORTE', leftMargin + 71, yPos);
             yPos += 4;
             
@@ -581,13 +581,13 @@
             pdf.setFontSize(8);
             
             // Subtotal alineado a la derecha
-            pdf.text('Subtotal:', rightMargin - 26, yPos);
+            pdf.text('Subtotal:', rightMargin - 28, yPos);
             pdf.text(`$${subtotal}`, rightMargin, yPos, { align: 'right' });
             yPos += 4;
             
             // Descuento (solo si hay descuento)
             if (parseInt(descuento) > 0) {
-                pdf.text('Descuento:', rightMargin - 25, yPos);
+                pdf.text('Descuento:', rightMargin - 28, yPos);
                 pdf.text(`-$${parseInt(descuento).toLocaleString('es-ES')}`, rightMargin, yPos, { align: 'right' });
                 yPos += 4;
             }
@@ -599,7 +599,7 @@
             // ==================== TOTAL FINAL ====================
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(10);
-            pdf.text('TOTAL:', rightMargin - 28, yPos);
+            pdf.text('TOTAL:', rightMargin - 32, yPos);
             pdf.text(`$${totalFinal}`, rightMargin, yPos, { align: 'right' });
             yPos += 8;
             
