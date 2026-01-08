@@ -532,8 +532,8 @@
             pdf.setFontSize(8);
             pdf.text('CANT', leftMargin, yPos);
             pdf.text('DESCRIPCIÓN', leftMargin + 15, yPos);
-            pdf.text('PRECIO', leftMargin + 60, yPos);
-            pdf.text('IMPORTE', leftMargin + 70, yPos);
+            pdf.text('PRECIO', leftMargin + 58, yPos);
+            pdf.text('IMPORTE', leftMargin + 71, yPos);
             yPos += 4;
             
             // ==================== ITEMS DE LA TABLA ====================
@@ -557,7 +557,7 @@
                     pdf.text(articuloCorto, leftMargin + 15, yPos);
                     
                     // Precio unitario alineado a la derecha en su columna
-                    pdf.text(`$${parseInt(valor).toLocaleString('es-ES')}`, leftMargin + 60, yPos, { align: 'right' });
+                    pdf.text(`$${parseInt(valor).toLocaleString('es-ES')}`, leftMargin + 65, yPos, { align: 'right' });
                     
                     // Total alineado a la derecha
                     pdf.text(total, rightMargin, yPos, { align: 'right' });
@@ -581,7 +581,7 @@
             pdf.setFontSize(8);
             
             // Subtotal alineado a la derecha
-            pdf.text('Subtotal:', rightMargin - 25, yPos);
+            pdf.text('Subtotal:', rightMargin - 26, yPos);
             pdf.text(`$${subtotal}`, rightMargin, yPos, { align: 'right' });
             yPos += 4;
             
@@ -599,7 +599,7 @@
             // ==================== TOTAL FINAL ====================
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(10);
-            pdf.text('TOTAL:', rightMargin - 25, yPos);
+            pdf.text('TOTAL:', rightMargin - 28, yPos);
             pdf.text(`$${totalFinal}`, rightMargin, yPos, { align: 'right' });
             yPos += 8;
             
