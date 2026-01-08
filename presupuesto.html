@@ -471,74 +471,100 @@
                 format: [100, 150]  // A6: 100x150mm
             });
             
-            // Configurar fuente
+            let yPos = 8;
+            const leftMargin = 8;
+            const rightMargin = 92;
+            const centerX = 50;
+            const lineHeight = 4;
+            
+            // ==================== ENCABEZADO EMPRESA ====================
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(12);
+            pdf.text('YO COMPRO', centerX, yPos, { align: 'center' });
+            yPos += 4;
+            
             pdf.setFont('helvetica', 'normal');
             pdf.setFontSize(8);
+            pdf.text('Tel: 266 4328198', centerX, yPos, { align: 'center' });
+            yPos += 3;
+            pdf.text('WhatsApp disponible', centerX, yPos, { align: 'center' });
+            yPos += 5;
             
-            let yPos = 10;
-            const leftMargin = 5;
-            const rightMargin = 95;
-            const lineHeight = 3;
+            // Línea separadora con asteriscos
+            pdf.setFontSize(6);
+            pdf.text('* * * * * * * * * * * * * * * * * * * *', centerX, yPos, { align: 'center' });
+            yPos += 4;
             
-            // Encabezado
+            // ==================== TIPO DE DOCUMENTO ====================
+            pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(10);
-            pdf.text('Yo Compro', leftMargin, yPos);
-            yPos += lineHeight;
-            
-            pdf.setFontSize(7);
-            pdf.text('Tel. 266 4328198', leftMargin, yPos);
-            yPos += lineHeight + 2;
-            
-            // Título Presupuesto y Fecha
-            pdf.setFontSize(9);
-            pdf.text('PRESUPUESTO', leftMargin, yPos);
-            
-            const fechaElement = document.getElementById('fecha');
-            pdf.text(fechaElement.innerText, rightMargin, yPos, { align: 'right' });
-            yPos += lineHeight + 3;
-            
-            // Línea separadora
-            pdf.line(leftMargin, yPos, rightMargin, yPos);
+            pdf.text('PRESUPUESTO', centerX, yPos, { align: 'center' });
             yPos += 3;
             
-            // Datos del cliente
+            const fechaElement = document.getElementById('fecha');
+            pdf.setFont('helvetica', 'normal');
             pdf.setFontSize(7);
+            pdf.text(`Fecha: ${fechaElement.innerText}`, centerX, yPos, { align: 'center' });
+            yPos += 5;
+            
+            // Línea separadora
+            pdf.setFontSize(6);
+            pdf.text('- - - - - - - - - - - - - - - - - - - -', centerX, yPos, { align: 'center' });
+            yPos += 4;
+            
+            // ==================== DATOS DEL CLIENTE ====================
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(8);
+            pdf.text('DATOS DEL CLIENTE', leftMargin, yPos);
+            yPos += 3;
+            
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(7);
+            
             const nombre = document.getElementById('nombre').value;
             const domicilio = document.getElementById('domicilio').value;
             const telefono = document.getElementById('telefono').value;
             
             if (nombre) {
-                pdf.text(`Nombre: ${nombre}`, leftMargin, yPos);
-                yPos += lineHeight;
+                pdf.text(`Cliente: ${nombre}`, leftMargin, yPos);
+                yPos += 3;
             }
             if (domicilio) {
                 pdf.text(`Domicilio: ${domicilio}`, leftMargin, yPos);
-                yPos += lineHeight;
+                yPos += 3;
             }
             if (telefono) {
-                pdf.text(`Teléfono: ${telefono}`, leftMargin, yPos);
-                yPos += lineHeight;
+                pdf.text(`Tel: ${telefono}`, leftMargin, yPos);
+                yPos += 3;
             }
+            
             yPos += 2;
             
             // Línea separadora
-            pdf.line(leftMargin, yPos, rightMargin, yPos);
-            yPos += 3;
+            pdf.setFontSize(6);
+            pdf.text('- - - - - - - - - - - - - - - - - - - -', centerX, yPos, { align: 'center' });
+            yPos += 4;
             
-            // Encabezados de tabla
+            // ==================== ENCABEZADOS DE TABLA ====================
+            pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(7);
-            pdf.text('Cant', leftMargin, yPos);
-            pdf.text('Artículo', leftMargin + 12, yPos);
-            pdf.text('Valor U.', leftMargin + 55, yPos);
-            pdf.text('Total', leftMargin + 75, yPos);
-            yPos += 3;
+            pdf.text('CANT', leftMargin, yPos);
+            pdf.text('DESCRIPCIÓN', leftMargin + 15, yPos);
+            pdf.text('PRECIO', leftMargin + 60, yPos);
+            pdf.text('IMPORTE', leftMargin + 75, yPos);
+            yPos += 2;
             
             // Línea bajo encabezados
             pdf.line(leftMargin, yPos, rightMargin, yPos);
-            yPos += 2;
+            yPos += 3;
             
-            // Items de la tabla
+            // ==================== ITEMS DE LA TABLA ====================
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(7);
+            
             const filas = document.querySelectorAll('#items tr');
+            let hayItems = false;
+            
             filas.forEach(fila => {
                 const cantidad = fila.querySelector('.cantidad').value || '0';
                 const articulo = fila.querySelector('.articulo').value || '';
@@ -546,53 +572,92 @@
                 const total = fila.querySelector('.total').innerText || '$0';
                 
                 if (cantidad !== '0' || articulo !== '') {
-                    pdf.text(cantidad, leftMargin, yPos);
+                    hayItems = true;
                     
-                    // Dividir texto largo del artículo si es necesario
-                    const maxWidth = 40;
-                    const articuloLines = pdf.splitTextToSize(articulo, maxWidth);
-                    pdf.text(articuloLines, leftMargin + 12, yPos);
+                    // Cantidad alineada al centro
+                    pdf.text(cantidad, leftMargin + 5, yPos, { align: 'center' });
                     
-                    pdf.text(`$${parseInt(valor).toLocaleString('es-ES')}`, leftMargin + 55, yPos);
-                    pdf.text(total, leftMargin + 75, yPos);
+                    // Descripción del artículo (dividir si es muy largo)
+                    const maxWidthDesc = 40;
+                    const articuloLines = pdf.splitTextToSize(articulo, maxWidthDesc);
+                    pdf.text(articuloLines, leftMargin + 15, yPos);
                     
-                    yPos += Math.max(3, articuloLines.length * 3);
+                    // Precio unitario alineado a la derecha
+                    pdf.text(`$${parseInt(valor).toLocaleString('es-ES')}`, leftMargin + 73, yPos, { align: 'right' });
+                    
+                    // Total alineado a la derecha
+                    pdf.text(total, rightMargin, yPos, { align: 'right' });
+                    
+                    yPos += Math.max(4, articuloLines.length * 3);
                 }
             });
             
+            if (!hayItems) {
+                pdf.text('Sin artículos', centerX, yPos, { align: 'center' });
+                yPos += 4;
+            }
+            
             yPos += 2;
             
-            // Línea separadora antes de totales
+            // ==================== LÍNEA DE TOTALES ====================
             pdf.line(leftMargin, yPos, rightMargin, yPos);
-            yPos += 3;
+            yPos += 4;
             
-            // Totales
-            pdf.setFontSize(7);
+            // ==================== TOTALES ====================
             const subtotal = document.getElementById('subtotal').innerText;
             const descuento = document.getElementById('descuento').value || '0';
             const totalFinal = document.getElementById('totalFinal').innerText;
             const formaPago = document.getElementById('formaPago').value;
             
-            pdf.text(`Subtotal: $${subtotal}`, leftMargin + 30, yPos);
-            yPos += lineHeight;
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(8);
             
+            // Subtotal
+            pdf.text('Subtotal:', leftMargin + 40, yPos);
+            pdf.text(`$${subtotal}`, rightMargin, yPos, { align: 'right' });
+            yPos += 3;
+            
+            // Descuento (solo si hay descuento)
             if (parseInt(descuento) > 0) {
-                pdf.text(`Descuento: $${parseInt(descuento).toLocaleString('es-ES')}`, leftMargin + 30, yPos);
-                yPos += lineHeight;
+                pdf.text('Descuento:', leftMargin + 40, yPos);
+                pdf.text(`-$${parseInt(descuento).toLocaleString('es-ES')}`, rightMargin, yPos, { align: 'right' });
+                yPos += 3;
             }
             
+            // Línea antes del total final
+            pdf.line(leftMargin + 35, yPos, rightMargin, yPos);
+            yPos += 3;
+            
+            // Total final en negrita
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(10);
+            pdf.text('TOTAL:', leftMargin + 40, yPos);
+            pdf.text(`$${totalFinal}`, rightMargin, yPos, { align: 'right' });
+            yPos += 5;
+            
+            // ==================== FORMA DE PAGO ====================
+            pdf.setFont('helvetica', 'normal');
             pdf.setFontSize(8);
-            pdf.text(`TOTAL: $${totalFinal}`, leftMargin + 30, yPos);
-            yPos += lineHeight + 1;
+            pdf.text(`Forma de Pago: ${formaPago}`, centerX, yPos, { align: 'center' });
+            yPos += 5;
+            
+            // ==================== PIE DE PÁGINA ====================
+            pdf.setFontSize(6);
+            pdf.text('* * * * * * * * * * * * * * * * * * * *', centerX, yPos, { align: 'center' });
+            yPos += 3;
             
             pdf.setFontSize(7);
-            pdf.text(`Forma de Pago: ${formaPago}`, leftMargin + 30, yPos);
+            pdf.text('¡Gracias por su confianza!', centerX, yPos, { align: 'center' });
+            yPos += 3;
+            
+            pdf.setFontSize(6);
+            pdf.text('Presupuesto válido por 15 días', centerX, yPos, { align: 'center' });
             
             // Generar nombre del archivo con fecha y hora
             const ahora = new Date();
             const fechaArchivo = ahora.toLocaleDateString('es-ES').replace(/\//g, '-');
             const horaArchivo = ahora.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'}).replace(/:/g, '');
-            const nombreArchivo = `presupuesto_${fechaArchivo}_${horaArchivo}.pdf`;
+            const nombreArchivo = `ticket_presupuesto_${fechaArchivo}_${horaArchivo}.pdf`;
             
             // Descargar el PDF
             pdf.save(nombreArchivo);
